@@ -9,16 +9,16 @@ namespace Md.EmailService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class EmailController : ControllerBase
+    public class InboxController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<EmailController> _logger;
+        private readonly ILogger<InboxController> _logger;
 
-        public EmailController(ILogger<EmailController> logger)
+        public InboxController(ILogger<InboxController> logger)
         {
             _logger = logger;
         }

@@ -1,5 +1,6 @@
 - https://joonasw.net/view/defining-permissions-and-roles-in-aad
 - https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Acquiring-tokens-with-authorization-codes-on-web-apps
+- https://auth0.com/blog/introduction-to-microservices-part-4-dependencies/
 
 ### Projects
 - md.backend.gateway (9901)

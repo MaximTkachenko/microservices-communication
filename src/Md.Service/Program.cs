@@ -19,6 +19,7 @@ namespace Md.Service
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
+                    services.AddHttpClient();
                 });
     }
 }

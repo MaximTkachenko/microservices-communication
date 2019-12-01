@@ -1,10 +1,17 @@
 {
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft": "Warning",
-      "Microsoft.Hosting.Lifetime": "Information"
+  "ReRoutes": [
+    {
+      "UpstreamPathTemplate": "/api/email/{anything}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/{anything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44302
+        }
+      ]
     }
-  },
-  "AllowedHosts": "*"
+  ],
+  "GlobalConfiguration": {}
 }
