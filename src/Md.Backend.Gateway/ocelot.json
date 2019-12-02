@@ -4,13 +4,19 @@
       "UpstreamPathTemplate": "/api/email/{anything}",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamPathTemplate": "/{anything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 44302
         }
-      ]
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          ""
+        ]
+      }
     }
   ],
   "GlobalConfiguration": {}

@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Md.Frontend
@@ -37,11 +40,14 @@ namespace Md.Frontend
 
             services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
             {
+                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+                options.Scope.Add(OpenIdConnectScope.OfflineAccess);
+                options.Resource = "api://md.backend";
+                options.SaveTokens = true;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    // Instead of using the default validation (validating against a single issuer value, as we do in
-                    // line of business apps), we inject our own multitenant validation logic
-                    ValidateIssuer = false,
+                    ValidateIssuer = true,
 
                     // If the app is meant to be accessed by entire organizations, add your issuer validation logic here.
                     //IssuerValidator = (issuer, securityToken, validationParameters) => {
@@ -62,6 +68,18 @@ namespace Md.Frontend
                         context.HandleResponse(); // Suppress the exception
                         return Task.CompletedTask;
                     },
+                    OnAuthorizationCodeReceived = async context =>
+                    {
+                        var request = context.HttpContext.Request;
+                        var credential = new ClientCredential(context.Options.ClientId, context.Options.ClientSecret);
+                        var authContext = new AuthenticationContext(context.Options.Authority);
+                        var currentUri = UriHelper.BuildAbsolute(request.Scheme, request.Host, request.PathBase, request.Path);
+
+                        var result = await authContext.AcquireTokenByAuthorizationCodeAsync(
+                            context.ProtocolMessage.Code, new Uri(currentUri), credential, context.Options.Resource);
+
+                        context.HandleCodeRedemption(result.AccessToken, result.IdToken);
+                    }
                     // If your application needs to do authenticate single users, add your user validation below.
                     //OnTokenValidated = context =>
                     //{

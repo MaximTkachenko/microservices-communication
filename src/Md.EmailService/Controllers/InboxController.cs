@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,7 +9,6 @@ using Microsoft.Extensions.Logging;
 namespace Md.EmailService.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class InboxController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -24,6 +24,7 @@ namespace Md.EmailService.Controllers
         }
 
         [HttpGet]
+        [Route("/inbox")]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
@@ -34,6 +35,13 @@ namespace Md.EmailService.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet]
+        [Route("/claims")]
+        public IEnumerable<KeyValuePair<string, string>> Claims()
+        {
+            return User.Claims.Select(x => new KeyValuePair<string, string>(x.Type, x.Value));
         }
     }
 }
