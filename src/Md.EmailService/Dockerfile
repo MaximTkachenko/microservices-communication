@@ -4,10 +4,9 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
-COPY ["Md.EmailService/Md.EmailService.csproj", "Md.EmailService/"]
-RUN dotnet restore "Md.EmailService/Md.EmailService.csproj"
+COPY ["Md.EmailService.csproj", ""]
+RUN dotnet restore "Md.EmailService.csproj"
 COPY . .
-WORKDIR "/src/Md.EmailService"
 RUN dotnet build "Md.EmailService.csproj" -c Release -o /app/build
 
 FROM build AS publish

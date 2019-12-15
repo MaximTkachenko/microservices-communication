@@ -5,11 +5,12 @@
 - https://joonasw.net/view/aspnet-core-2-azure-ad-authentication
 - https://docs.microsoft.com/en-us/samples/azure-samples/active-directory-dotnet-webapp-webapi-openidconnect/active-directory-dotnet-webapp-webapi-openidconnect/
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-aspnet-core-webapp
+- https://dzone.com/articles/azures-infrastructure-as-code-azure-resource-manag
 
 ### Projects
-- md.backend.gateway (https, 44301)
-- md.emailservice (http, 44302)
-- md.frontend (https, 44303)
+- md.backend.gateway (http,8301)
+- md.emailservice (http, 8302)
+- md.frontend (http, 8303)
 - md.service
 
 ### Workflows
@@ -19,8 +20,15 @@
 ### ToDos
 - docker
 - k8s
+- sf
+- aci
 - local environment
 - arm templates
 - azure k8s cluster for production and staging
-- monitoring
+- monitoring, logging
 - setup script
+- actors
+- grpc
+- secrets
+- managed identities
+- rbac
