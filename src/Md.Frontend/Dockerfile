@@ -5,6 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
 COPY ["Md.Frontend/Md.Frontend.csproj", "Md.Frontend/"]
+COPY ["Md.Common/Md.Common.csproj", "Md.Common/"]
 RUN dotnet restore "Md.Frontend/Md.Frontend.csproj"
 COPY . .
 WORKDIR "/src/Md.Frontend"

@@ -1,1 +1,0 @@
-docker build -t md-emailservice-app:v2 .

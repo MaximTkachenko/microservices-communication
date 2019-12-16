@@ -18,7 +18,7 @@ namespace Md.Common
                 dictionary.Add(variable.Key.ToString(), variable.Value);
             }
 
-            return Task.FromResult(HealthCheckResult.Healthy("env", dictionary));
+            return Task.FromResult(HealthCheckResult.Healthy("environment", dictionary));
         }
     }
 }

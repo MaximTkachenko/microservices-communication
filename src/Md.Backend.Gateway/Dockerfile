@@ -5,6 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
 COPY ["Md.Backend.Gateway/Md.Backend.Gateway.csproj", "Md.Backend.Gateway/"]
+COPY ["Md.Common/Md.Common.csproj", "Md.Common/"]
 RUN dotnet restore "Md.Backend.Gateway/Md.Backend.Gateway.csproj"
 COPY . .
 WORKDIR "/src/Md.Backend.Gateway"

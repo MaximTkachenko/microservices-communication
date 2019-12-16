@@ -21,8 +21,7 @@ namespace Md.Common
                         new JProperty("description", pair.Value.Description),
                         new JProperty("data", new JObject(pair.Value.Data.Select(
                             p => new JProperty(p.Key, p.Value))))))))));
-            return httpContext.Response.WriteAsync(
-                json.ToString(Formatting.Indented));
+            return httpContext.Response.WriteAsync(json.ToString(Formatting.Indented));
         }
     }
 }
