@@ -7,6 +7,7 @@
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-aspnet-core-webapp
 - https://dzone.com/articles/azures-infrastructure-as-code-azure-resource-manag
 - https://www.ovh.com/blog/getting-external-traffic-into-kubernetes-clusterip-nodeport-loadbalancer-and-ingress/
+- https://www.dotnetcurry.com/devops/1518/aspnet-core-cicd-azure-kubernetes-service
 
 ### Projects
 - md.backend.gateway (http,8301)

@@ -68,6 +68,7 @@ namespace Md.Frontend
                         context.HandleResponse(); // Suppress the exception
                         return Task.CompletedTask;
                     },
+                    //todo how to store token?!!!
                     OnAuthorizationCodeReceived = async context =>
                     {
                         var request = context.HttpContext.Request;
