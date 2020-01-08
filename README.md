@@ -6,6 +6,7 @@
 - https://docs.microsoft.com/en-us/samples/azure-samples/active-directory-dotnet-webapp-webapi-openidconnect/active-directory-dotnet-webapp-webapi-openidconnect/
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-aspnet-core-webapp
 - https://dzone.com/articles/azures-infrastructure-as-code-azure-resource-manag
+- https://www.ovh.com/blog/getting-external-traffic-into-kubernetes-clusterip-nodeport-loadbalancer-and-ingress/
 
 ### Projects
 - md.backend.gateway (http,8301)
