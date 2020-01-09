@@ -9,6 +9,7 @@
 - https://www.ovh.com/blog/getting-external-traffic-into-kubernetes-clusterip-nodeport-loadbalancer-and-ingress/
 - https://www.dotnetcurry.com/devops/1518/aspnet-core-cicd-azure-kubernetes-service
 - https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0
+- https://theithollow.com/2019/02/05/kubernetes-service-publishing/
 
 - https://medium.com/google-cloud/understanding-kubernetes-networking-pods-7117dd28727
 - https://medium.com/google-cloud/understanding-kubernetes-networking-services-f0cb48e4cc82
