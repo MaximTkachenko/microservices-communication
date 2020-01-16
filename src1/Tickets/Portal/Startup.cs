@@ -78,7 +78,40 @@ namespace Portal
                         var result = await authContext.AcquireTokenByAuthorizationCodeAsync(
                             context.ProtocolMessage.Code, new Uri(currentUri), credential, context.Options.Resource);
 
-                        //"scp": "Tickets UsersAndClaims"
+                        /*jwt sample:
+                        {
+                          "typ": "JWT",
+                          "alg": "RS256",
+                          "x5t": "piVlloQDSMKxh1m2ygqGSVdgFpA",
+                          "kid": "piVlloQDSMKxh1m2ygqGSVdgFpA"
+                        }.{
+                          "aud": "api://theapp.api",
+                          "iss": "https://sts.windows.net/6b9be1b6-4f80-4ce7-8479-16c4d7726470/",
+                          "iat": 1579196108,
+                          "nbf": 1579196108,
+                          "exp": 1579200008,
+                          "acr": "1",
+                          "aio": "AVQAq/8OAAAAHLg2UT5qfZ230dYPJdzk14ooexDdZowHBfKshArz7hAc1CVrWZQ1VzjPmk1eT6Os1+wC7zGXf32LiPCWKJ+as63NbWZ9CoqCneXhNWbcRtY=",
+                          "amr": [
+                            "pwd"
+                          ],
+                          "appid": "b021b14e-1671-4fe6-b7cc-0a67a248543f",
+                          "appidacr": "1",
+                          "email": "oblomov86@gmail.com",
+                          "family_name": "Tkachenko",
+                          "given_name": "Maxim",
+                          "idp": "live.com",
+                          "ipaddr": "51.174.85.2",
+                          "name": "Maxim Tkachenko",
+                          "oid": "03526494-16e1-4e21-99a5-9d734186092e",
+                          "scp": "Tickets UsersAndClaims",
+                          "sub": "hI_OiH4kmvVkzY_NU24aOlahR06Dul7zZe5smXJHM90",
+                          "tid": "6b9be1b6-4f80-4ce7-8479-16c4d7726470",
+                          "unique_name": "live.com#oblomov86@gmail.com",
+                          "uti": "IMYPesSovk2YXZAm5Og9AQ",
+                          "ver": "1.0"
+                        }.[Signature]
+                         */
                         context.HandleCodeRedemption(result.AccessToken, result.IdToken);
                     }
                     // If your application needs to authenticate single users, add your user validation below.
