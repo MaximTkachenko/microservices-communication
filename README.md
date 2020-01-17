@@ -2,7 +2,7 @@
 - `Portal` - web application, AzureAd OpenIdConnect
 - `User.WebApi` - microservice used to manage users and claims
 - `Glossary.WebApi` - microservice used to manage common data like cusromers, offices etc.
-- `Tickets.WebApi`, `Tickets.Daemon` - micriservice to manage tickets
+- `Tickets.WebApi`, `Tickets.Daemon` - microservice to manage tickets
 
 ## ToDos
 - cache tokens in web app
