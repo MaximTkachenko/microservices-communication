@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,13 +8,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Common
+namespace Portal.Middlewares
 {
-    public class RemoteClaimsHydrationMiddleware
+    public class PortalRemoteClaimsHydrationMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public RemoteClaimsHydrationMiddleware(RequestDelegate next)
+        public PortalRemoteClaimsHydrationMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -29,7 +28,7 @@ namespace Common
                 return;
             }
 
-            var accessToken = context.Request.Headers["Authorization"].First().Split(' ')[1];
+            var accessToken = string.Empty; //todo get from token cache
             var email = context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email))
             {
@@ -61,11 +60,11 @@ namespace Common
         }
     }
 
-    public static class RemoteClaimsHydrationMiddlewareExtensions
+    public static class PortalRemoteClaimsHydrationMiddlewareExtensions
     {
-        public static IApplicationBuilder UseRemoteClaimsHydrationMiddleware(this IApplicationBuilder builder)
+        public static IApplicationBuilder UsePortalRemoteClaimsHydrationMiddleware(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<RemoteClaimsHydrationMiddleware>();
+            return builder.UseMiddleware<PortalRemoteClaimsHydrationMiddleware>();
         }
     }
 }

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Common;
@@ -12,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +19,7 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Portal.Db;
+using Portal.Middlewares;
 
 namespace Portal
 {
@@ -131,7 +129,7 @@ namespace Portal
             app.UseAuthentication();
 
             app.UseUserClaimsMiddleware("/test-claims-1");
-            //app.UseRemoteClaimsHydrationMiddleware(); //todo we need another middleware to get tokens from TokenCache
+            app.UsePortalRemoteClaimsHydrationMiddleware();
             app.UseUserClaimsMiddleware("/test-claims-2");
 
             app.UseAuthorization();

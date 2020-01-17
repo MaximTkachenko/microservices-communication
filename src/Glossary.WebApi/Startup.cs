@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Tickets.WebApi
+namespace Glossary.WebApi
 {
     public class Startup
     {
@@ -56,12 +56,12 @@ namespace Tickets.WebApi
 
             app.UseRouting();
 
-            app.UseAuthentication(); 
-            
+            app.UseAuthentication();
+
             app.UseUserClaimsMiddleware("/test-claims-1");
-            app.UseRemoteClaimsHydrationMiddleware();
+            app.UseApiRemoteClaimsHydrationMiddleware();
             app.UseUserClaimsMiddleware("/test-claims-2");
-            
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -30,7 +30,7 @@ namespace Common
                 var claims = context.User.Claims.Select(x => $"{x.Type} = {x.Value}").ToArray();
 
                 context.Response.ContentType = "application/json";
-                await context.Response.WriteAsync(JsonSerializer.Serialize(claims, new JsonSerializerOptions{WriteIndented = true}));
+                await context.Response.WriteAsync(JsonSerializer.Serialize(claims, new JsonSerializerOptions { WriteIndented = true }));
                 return;
             }
 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,12 +11,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Tickets.Common;
 
-namespace Glossary.WebApi
+namespace Tickets.WebApi
 {
     public class Startup
     {
@@ -44,6 +48,9 @@ namespace Glossary.WebApi
             });
 
             services.AddHttpClient();
+
+            var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
+            services.AddDbContext<TicketsDb>(x => x.UseSqlite(Path.Combine(folder, "db", "TicketsDb")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,12 +63,12 @@ namespace Glossary.WebApi
 
             app.UseRouting();
 
-            app.UseAuthentication();
-
+            app.UseAuthentication(); 
+            
             app.UseUserClaimsMiddleware("/test-claims-1");
-            app.UseRemoteClaimsHydrationMiddleware();
+            app.UseApiRemoteClaimsHydrationMiddleware();
             app.UseUserClaimsMiddleware("/test-claims-2");
-
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

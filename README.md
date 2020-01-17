@@ -1,3 +1,5 @@
+## Links
+
 - https://joonasw.net/view/defining-permissions-and-roles-in-aad
 - https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Acquiring-tokens-with-authorization-codes-on-web-apps
 - https://auth0.com/blog/introduction-to-microservices-part-4-dependencies/
@@ -19,22 +21,21 @@
 
 - https://joonasw.net/view/aspnet-core-2-azure-ad-authentication
 
-### Projects
-- md.backend.gateway (http,8301)
-- md.emailservice (http, 8302)
-- md.frontend (http, 8303)
-- md.service
+## Projects
+- `Portal` - web application, AzureAd OpenIdConnect
+- `User.WebApi` - microservice used to manage users and claims
+- `Glossary.WebApi` - microservice used to manage common data like cusromers, offices etc.
+- `Tickets.WebApi`, `Tickets.Daemon` - micriservice to manage tickets
 
-### Workflows
-- md.service (oauth2 client_credentils) -> md.backend.gateway -> md.emailservice
-- md.frontend (openidconnect + access_token) -> md.backend.gateway -> md.emailservice
-
-### ToDos
+## ToDos
+- cache tokens in web app
+- validate tokens from different tenants
+- proper authorization in microservices
+- local environment (ports etc.)
 - docker
 - k8s
 - sf
 - aci
-- local environment
 - arm templates
 - azure k8s cluster for production and staging
 - monitoring, logging
