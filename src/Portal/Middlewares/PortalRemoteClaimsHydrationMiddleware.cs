@@ -36,6 +36,7 @@ namespace Portal.Middlewares
                 return;
             }
 
+            //todo put url to claims api into config
             var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost:5000/api/claims/{email}");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var response = await http.CreateClient().SendAsync(request);
