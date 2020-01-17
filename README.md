@@ -17,6 +17,8 @@
 
 - https://gardener.cloud/050-tutorials/content/howto/service-access/
 
+- https://joonasw.net/view/aspnet-core-2-azure-ad-authentication
+
 ### Projects
 - md.backend.gateway (http,8301)
 - md.emailservice (http, 8302)
@@ -42,3 +44,67 @@
 - secrets
 - managed identities
 - rbac
+
+JWT sample for delegated permissions:
+```json
+{
+    "typ": "JWT",
+    "alg": "RS256",
+    "x5t": "piVlloQDSMKxh1m2ygqGSVdgFpA",
+    "kid": "piVlloQDSMKxh1m2ygqGSVdgFpA"
+}.{
+    "aud": "api://theapp.api",
+    "iss": "https://sts.windows.net/6b9be1b6-4f80-4ce7-8479-16c4d7726470/",
+    "iat": 1579196108,
+    "nbf": 1579196108,
+    "exp": 1579200008,
+    "acr": "1",
+    "aio": "AVQAq/8OAAAAHLg2UT5qfZ230dYPJdzk14ooexDdZowHBfKshArz7hAc1CVrWZQ1VzjPmk1eT6Os1+wC7zGXf32LiPCWKJ+as63NbWZ9CoqCneXhNWbcRtY=",
+    "amr": [
+    "pwd"
+    ],
+    "appid": "b021b14e-1671-4fe6-b7cc-0a67a248543f",
+    "appidacr": "1",
+    "email": "oblomov86@gmail.com",
+    "family_name": "Tkachenko",
+    "given_name": "Maxim",
+    "idp": "live.com",
+    "ipaddr": "51.174.85.2",
+    "name": "Maxim Tkachenko",
+    "oid": "03526494-16e1-4e21-99a5-9d734186092e",
+    "scp": "Tickets UsersAndClaims",
+    "sub": "hI_OiH4kmvVkzY_NU24aOlahR06Dul7zZe5smXJHM90",
+    "tid": "6b9be1b6-4f80-4ce7-8479-16c4d7726470",
+    "unique_name": "live.com#oblomov86@gmail.com",
+    "uti": "IMYPesSovk2YXZAm5Og9AQ",
+    "ver": "1.0"
+}.[Signature]
+```
+
+JWT sample for application permissions:
+```json
+{
+    "typ": "JWT",
+    "alg": "RS256",
+    "x5t": "piVlloQDSMKxh1m2ygqGSVdgFpA",
+    "kid": "piVlloQDSMKxh1m2ygqGSVdgFpA"
+}.{
+    "aud": "api://theapp.api",
+    "iss": "https://sts.windows.net/6b9be1b6-4f80-4ce7-8479-16c4d7726470/",
+    "iat": 1579195869,
+    "nbf": 1579195869,
+    "exp": 1579199769,
+    "aio": "42NgYNBT87n6dabGJua9Hbf/nX76DAA=",
+    "appid": "da51a2ec-058f-4025-a75a-41af428be001",
+    "appidacr": "1",
+    "idp": "https://sts.windows.net/6b9be1b6-4f80-4ce7-8479-16c4d7726470/",
+    "oid": "e3b6fc55-78eb-4dc9-9e74-dd6a1ddf11e9",
+    "roles": [
+    "Daemon"
+    ],
+    "sub": "e3b6fc55-78eb-4dc9-9e74-dd6a1ddf11e9",
+    "tid": "6b9be1b6-4f80-4ce7-8479-16c4d7726470",
+    "uti": "s3znyXXUUkWXBssYBL09AQ",
+    "ver": "1.0"
+}.[Signature]
+```
