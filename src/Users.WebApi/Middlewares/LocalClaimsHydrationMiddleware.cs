@@ -37,7 +37,7 @@ namespace Users.WebApi.Middlewares
 
     public static class LocalClaimsHydrationMiddlewareExtensions
     {
-        public static IApplicationBuilder UseLocalClaimsHydrationMiddleware(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseLocalClaimsHydration(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<LocalClaimsHydrationMiddleware>();
         }

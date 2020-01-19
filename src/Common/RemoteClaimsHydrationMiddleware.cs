@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,17 +10,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace Common
 {
-    public class ApiRemoteClaimsHydrationMiddleware
+    public class RemoteClaimsHydrationMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public ApiRemoteClaimsHydrationMiddleware(RequestDelegate next)
+        public RemoteClaimsHydrationMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
         public async Task InvokeAsync(HttpContext context,
-            IHttpClientFactory http)
+            IHttpClientFactory http,
+            IAccessTokenGetter accessTokenGetter)
         {
             if (!context.User.Identity.IsAuthenticated)
             {
@@ -29,13 +29,13 @@ namespace Common
                 return;
             }
 
-            var accessToken = context.Request.Headers["Authorization"].First().Split(' ')[1];
-            var email = context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            if (string.IsNullOrEmpty(email))
+            if (!context.User.TryGetEmail(out var email))
             {
                 await _next(context);
                 return;
             }
+
+            var accessToken = await accessTokenGetter.GetTokenAsync(context);
 
             //todo put url to claims api into config
             var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost:5000/api/claims/{email}");
@@ -62,11 +62,11 @@ namespace Common
         }
     }
 
-    public static class ApiRemoteClaimsHydrationMiddlewareExtensions
+    public static class RemoteClaimsHydrationMiddlewareExtensions
     {
-        public static IApplicationBuilder UseApiRemoteClaimsHydrationMiddleware(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseRemoteClaimsHydration(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<ApiRemoteClaimsHydrationMiddleware>();
+            return builder.UseMiddleware<RemoteClaimsHydrationMiddleware>();
         }
     }
 }

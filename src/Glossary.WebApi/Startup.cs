@@ -44,6 +44,7 @@ namespace Glossary.WebApi
             });
 
             services.AddHttpClient();
+            services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,9 +59,9 @@ namespace Glossary.WebApi
 
             app.UseAuthentication();
 
-            app.UseUserClaimsDumpMiddleware("/claims-dump-1");
-            app.UseApiRemoteClaimsHydrationMiddleware();
-            app.UseUserClaimsDumpMiddleware("/claims-dump-2");
+            app.UseUserClaimsDump("/claims-dump-1");
+            app.UseRemoteClaimsHydration();
+            app.UseUserClaimsDump("/claims-dump-2");
 
             app.UseAuthorization();
 

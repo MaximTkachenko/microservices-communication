@@ -51,6 +51,7 @@ namespace Tickets.WebApi
 
             var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
             services.AddDbContext<TicketsDb>(x => x.UseSqlite(Path.Combine(folder, "db", "TicketsDb")));
+            services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,9 +66,9 @@ namespace Tickets.WebApi
 
             app.UseAuthentication(); 
             
-            app.UseUserClaimsDumpMiddleware("/claims-dump-1");
-            app.UseApiRemoteClaimsHydrationMiddleware();
-            app.UseUserClaimsDumpMiddleware("/claims-dump-2");
+            app.UseUserClaimsDump("/claims-dump-1");
+            app.UseRemoteClaimsHydration();
+            app.UseUserClaimsDump("/claims-dump-2");
             
             app.UseAuthorization();
 

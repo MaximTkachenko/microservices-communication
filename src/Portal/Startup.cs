@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +18,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using Portal.Db;
-using Portal.Middlewares;
+using Portal.Middleware;
+using Portal.Services;
 
 namespace Portal
 {
@@ -85,8 +82,8 @@ namespace Portal
                         var result = await authContext.AcquireTokenByAuthorizationCodeAsync(
                             context.ProtocolMessage.Code, new Uri(currentUri), credential, context.Options.Resource);
 
-                        var cp = typeof(TokenCache).GetField("_tokenCacheDictionary", BindingFlags.Instance | BindingFlags.NonPublic);
-                        var tokens = cp.GetValue(context.HttpContext.RequestServices.GetService<TokenCache>());
+                        //var cp = typeof(TokenCache).GetField("_tokenCacheDictionary", BindingFlags.Instance | BindingFlags.NonPublic);
+                        //var tokens = cp.GetValue(context.HttpContext.RequestServices.GetService<TokenCache>());
 
                         context.HandleCodeRedemption(result.AccessToken, result.IdToken);
                     }
@@ -108,11 +105,11 @@ namespace Portal
 
             services.AddRazorPages();
             services.AddHttpClient();
-
             services.AddSingleton<TokenCache>();//todo need to improve
+            services.AddSingleton<IAccessTokenGetter, FromCacheAccessTokenGetter>();
 
             var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
-            //services.AddDbContext<PortalDb>(x => x.UseSqlite(Path.Combine(folder, "db", "PortalDb")));
+            services.AddDbContext<PortalDb>(x => x.UseSqlite(Path.Combine(folder, "db", "PortalDb")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -135,9 +132,10 @@ namespace Portal
 
             app.UseAuthentication();
 
-            app.UseUserClaimsDumpMiddleware("/claims-dump-1");
-            app.UsePortalRemoteClaimsHydrationMiddleware();
-            app.UseUserClaimsDumpMiddleware("/claims-dump-2");
+            app.UseUserClaimsDump("/claims-dump-1");
+            app.UseAdalTokenAcquisitionException();
+            app.UseRemoteClaimsHydration();
+            app.UseUserClaimsDump("/claims-dump-2");
 
             app.UseAuthorization();
 

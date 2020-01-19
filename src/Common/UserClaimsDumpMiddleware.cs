@@ -40,7 +40,7 @@ namespace Common
 
     public static class UserClaimsDumpMiddlewareExtensions
     {
-        public static IApplicationBuilder UseUserClaimsDumpMiddleware(this IApplicationBuilder builder, string path)
+        public static IApplicationBuilder UseUserClaimsDump(this IApplicationBuilder builder, string path)
         {
             return builder.UseMiddleware<UserClaimsDumpMiddleware>(path);
         }

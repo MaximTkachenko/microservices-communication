@@ -59,9 +59,9 @@ namespace Users.WebApi
 
             app.UseAuthentication();
 
-            app.UseUserClaimsDumpMiddleware("/claims-dump-1");
-            app.UseLocalClaimsHydrationMiddleware();
-            app.UseUserClaimsDumpMiddleware("/claims-dump-2");
+            app.UseUserClaimsDump("/claims-dump-1");
+            app.UseLocalClaimsHydration();
+            app.UseUserClaimsDump("/claims-dump-2");
 
             app.UseAuthorization();
 
