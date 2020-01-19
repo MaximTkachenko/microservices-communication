@@ -111,4 +111,5 @@ JWT sample for application permissions:
 - https://gardener.cloud/050-tutorials/content/howto/service-access/
 
 - https://joonasw.net/view/aspnet-core-2-azure-ad-authentication
+- https://docs.microsoft.com/en-us/azure/architecture/multitenant-identity/web-api
 

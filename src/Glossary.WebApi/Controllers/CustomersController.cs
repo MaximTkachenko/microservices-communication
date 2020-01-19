@@ -18,8 +18,8 @@ namespace Glossary.WebApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet, Route("{userId}")]
+        public IActionResult Get(long userId)
         {
             return Ok();
         }
