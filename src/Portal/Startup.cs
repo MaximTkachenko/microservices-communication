@@ -1,14 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +21,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Portal.Db;
 using Portal.Middlewares;
 
@@ -43,7 +47,6 @@ namespace Portal
                 options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 options.Scope.Add(OpenIdConnectScope.OfflineAccess);
                 options.Resource = "api://theapp.api";
-                options.SaveTokens = true;
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -58,7 +61,7 @@ namespace Portal
                 };
 
                 //https://docs.microsoft.com/en-us/azure/architecture/multitenant-identity/token-cache
-                //https://joonasw.net/view/aspnet-core-2-azure-ad-authentication#disqus_thread
+                //https://joonasw.net/view/aspnet-core-2-azure-ad-authentication
                 options.Events = new OpenIdConnectEvents
                 {
                     OnTicketReceived = context =>
@@ -76,11 +79,14 @@ namespace Portal
                     {
                         var request = context.HttpContext.Request;
                         var credential = new ClientCredential(context.Options.ClientId, context.Options.ClientSecret);
-                        var authContext = new AuthenticationContext(context.Options.Authority, new TokenCache());
+                        var authContext = new AuthenticationContext(context.Options.Authority, context.HttpContext.RequestServices.GetService<TokenCache>());
                         var currentUri = UriHelper.BuildAbsolute(request.Scheme, request.Host, request.PathBase, request.Path);
 
                         var result = await authContext.AcquireTokenByAuthorizationCodeAsync(
                             context.ProtocolMessage.Code, new Uri(currentUri), credential, context.Options.Resource);
+
+                        var cp = typeof(TokenCache).GetField("_tokenCacheDictionary", BindingFlags.Instance | BindingFlags.NonPublic);
+                        var tokens = cp.GetValue(context.HttpContext.RequestServices.GetService<TokenCache>());
 
                         context.HandleCodeRedemption(result.AccessToken, result.IdToken);
                     }
@@ -101,11 +107,12 @@ namespace Portal
             });
 
             services.AddRazorPages();
-
             services.AddHttpClient();
 
+            services.AddSingleton<TokenCache>();//todo need to improve
+
             var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
-            services.AddDbContext<PortalDb>(x => x.UseSqlite(Path.Combine(folder, "db", "PortalDb")));
+            //services.AddDbContext<PortalDb>(x => x.UseSqlite(Path.Combine(folder, "db", "PortalDb")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -128,9 +135,9 @@ namespace Portal
 
             app.UseAuthentication();
 
-            app.UseUserClaimsMiddleware("/test-claims-1");
+            app.UseUserClaimsDumpMiddleware("/claims-dump-1");
             app.UsePortalRemoteClaimsHydrationMiddleware();
-            app.UseUserClaimsMiddleware("/test-claims-2");
+            app.UseUserClaimsDumpMiddleware("/claims-dump-2");
 
             app.UseAuthorization();
 

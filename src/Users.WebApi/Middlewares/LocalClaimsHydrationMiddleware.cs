@@ -20,7 +20,7 @@ namespace Users.WebApi.Middlewares
         {
             if (!context.User.Identity.IsAuthenticated)
             {
-                context.Response.StatusCode = 401;
+                await _next(context);
                 return;
             }
 

@@ -7,6 +7,8 @@
 ## ToDos
 - cache tokens in web app
 - validate tokens from different tenants
+- accesstoken and refreshtoken expiration
+- access from  different tenants
 - proper authorization in microservices
 - local environment (ports etc.)
 - docker

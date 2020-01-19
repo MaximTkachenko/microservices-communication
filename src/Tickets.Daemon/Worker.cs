@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -15,15 +15,16 @@ namespace Tickets.Daemon
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IHttpClientFactory _http;
         private readonly AuthenticationContext _authContext;
         private readonly ClientCredential _credential;
 
         public Worker(ILogger<Worker> logger,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory http)
         {
             _logger = logger;
-            _httpClientFactory = httpClientFactory;
+            _http = http;
+            //todo add TokenCache
             _authContext = new AuthenticationContext("https://login.microsoftonline.com/6b9be1b6-4f80-4ce7-8479-16c4d7726470");
             _credential = new ClientCredential("da51a2ec-058f-4025-a75a-41af428be001", "9T/R7A2c?AZ4GAhkNWP]L=0UyH2ndXB6");
         }
@@ -34,9 +35,19 @@ namespace Tickets.Daemon
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
+                //todo cache tokens
                 var tokenResult = await _authContext.AcquireTokenAsync("api://theapp.api", _credential);
 
                 Console.WriteLine(tokenResult.AccessToken);
+
+                //reading claims for any user
+                var request = new HttpRequestMessage(HttpMethod.Get, $"http://localhost:5000/api/claims/oblomov86@gmail.com");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.AccessToken);
+                var response = await _http.CreateClient().SendAsync(request, stoppingToken);
+                using (var responseStream = await response.Content.ReadAsStreamAsync())
+                {
+                    var claims = await JsonSerializer.DeserializeAsync<IEnumerable<KeyValuePair<string, string>>>(responseStream, cancellationToken: stoppingToken);
+                }
 
                 await Task.Delay(5000, stoppingToken);
             }

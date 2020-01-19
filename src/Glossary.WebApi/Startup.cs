@@ -58,9 +58,9 @@ namespace Glossary.WebApi
 
             app.UseAuthentication();
 
-            app.UseUserClaimsMiddleware("/test-claims-1");
+            app.UseUserClaimsDumpMiddleware("/claims-dump-1");
             app.UseApiRemoteClaimsHydrationMiddleware();
-            app.UseUserClaimsMiddleware("/test-claims-2");
+            app.UseUserClaimsDumpMiddleware("/claims-dump-2");
 
             app.UseAuthorization();
 

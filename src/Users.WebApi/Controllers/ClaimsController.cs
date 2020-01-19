@@ -12,6 +12,7 @@ namespace Users.WebApi.Controllers
         //todo check permissions: daemon, owner or admin
         public IActionResult GetClaims(string upn)
         {
+            //todo anyway it's better to read from db because for daemon this logic doesn't work'
             var theAppClaims = User.Identities.First().Claims.Where(x => x.Issuer == "theapp")
                 .Select(x => new KeyValuePair<string, string>(x.Type, x.Value));
             return Ok(theAppClaims);

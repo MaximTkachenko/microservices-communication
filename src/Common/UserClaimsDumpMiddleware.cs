@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace Common
 {
-    public class UserClaimsMiddleware
+    public class UserClaimsDumpMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly string _path;
 
-        public UserClaimsMiddleware(RequestDelegate next, string path)
+        public UserClaimsDumpMiddleware(RequestDelegate next, string path)
         {
             _next = next;
             _path = path;
@@ -38,11 +38,11 @@ namespace Common
         }
     }
 
-    public static class UserClaimsMiddlewareExtensions
+    public static class UserClaimsDumpMiddlewareExtensions
     {
-        public static IApplicationBuilder UseUserClaimsMiddleware(this IApplicationBuilder builder, string path)
+        public static IApplicationBuilder UseUserClaimsDumpMiddleware(this IApplicationBuilder builder, string path)
         {
-            return builder.UseMiddleware<UserClaimsMiddleware>(path);
+            return builder.UseMiddleware<UserClaimsDumpMiddleware>(path);
         }
     }
 }
