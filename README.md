@@ -112,4 +112,6 @@ JWT sample for application permissions:
 
 - https://joonasw.net/view/aspnet-core-2-azure-ad-authentication
 - https://docs.microsoft.com/en-us/azure/architecture/multitenant-identity/web-api
-
+- https://docs.microsoft.com/en-us/azure/active-directory/develop/setup-multi-tenant-app
+- https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent
+- authorization and data protection
