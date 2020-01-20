@@ -107,9 +107,7 @@ namespace Portal
             services.AddHttpClient();
             services.AddSingleton<TokenCache>();//todo need to improve
             services.AddSingleton<IAccessTokenGetter, FromCacheAccessTokenGetter>();
-
-            var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
-            services.AddDbContext<PortalDb>(x => x.UseSqlite(Path.Combine(folder, "db", "PortalDb")));
+            services.AddDbContext<PortalDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=PortalDb"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

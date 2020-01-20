@@ -51,10 +51,7 @@ namespace Users.WebApi
 
             services.AddSingleton<IAuthorizationHandler, ClaimsAuthorizationHandler>();
             services.AddHttpClient();
-
-            var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
-            var db = Path.Combine(folder, "db", "UsersDb.db");
-            services.AddDbContext<UsersDb>(x => x.UseSqlite($"Data Source=./usersdb.db"));
+            services.AddDbContext<UsersDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=UsersDb"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -48,9 +48,7 @@ namespace Tickets.WebApi
             });
 
             services.AddHttpClient();
-
-            var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
-            services.AddDbContext<TicketsDb>(x => x.UseSqlite(Path.Combine(folder, "db", "TicketsDb")));
+            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
             services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
         }
 

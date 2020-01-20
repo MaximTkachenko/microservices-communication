@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Common.UsersApiModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
@@ -47,15 +48,15 @@ namespace Common
                 return;
             }
 
-            IEnumerable<KeyValuePair<string, string>> claims;
+            IEnumerable<ApiClaim> claims;
             using (var responseStream = await response.Content.ReadAsStreamAsync())
             {
-                claims = await JsonSerializer.DeserializeAsync<IEnumerable<KeyValuePair<string, string>>>(responseStream);
+                claims = await JsonSerializer.DeserializeAsync<ApiClaim[]>(responseStream);
             }
 
             foreach (var claim in claims)
             {
-                context.User.Identities.First().AddClaim(new Claim(claim.Key, claim.Value));
+                context.User.Identities.First().AddClaim(new Claim(claim.ClaimType, claim.ClaimValue));
             }
 
             await _next(context);

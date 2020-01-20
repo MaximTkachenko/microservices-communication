@@ -23,9 +23,7 @@ namespace Tickets.Daemon
         {
             services.AddHttpClient();
             services.AddHostedService<Worker>();
-
-            var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
-            services.AddDbContext<TicketsDb>(x => x.UseSqlite(Path.Combine(folder, "db", "TicketsDb")));
+            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
             services.AddSingleton<TokenCache>();//todo need to improve
         }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Common;
+using Common.UsersApiModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,9 @@ namespace Users.WebApi.Controllers
                 return Forbid();
             }
 
-            var theAppClaims = await _db.Claims.Where(x => x.UserId == user.Id).ToArrayAsync();
+            var theAppClaims = await _db.Claims.Where(x => x.UserId == user.Id)
+                .Select(x => new ApiClaim {ClaimType = x.ClaimType, ClaimValue = x.ClaimValue, ClaimValueType = x.ClaimValueType })
+                .ToListAsync();
             return Ok(theAppClaims);
         }
 
