@@ -1,9 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Users.WebApi.Db;
 
 namespace Users.WebApi.Middlewares
 {
@@ -16,7 +18,8 @@ namespace Users.WebApi.Middlewares
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context,
+            UsersDb db)
         {
             if (!context.User.Identity.IsAuthenticated)
             {
@@ -24,11 +27,14 @@ namespace Users.WebApi.Middlewares
                 return;
             }
 
-            var email = context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            if (!string.IsNullOrEmpty(email))
+            if (context.User.TryGetEmail(out var email))
             {
-                //todo read from database + caching
-                context.User.Identities.First().AddClaim(new Claim("x-userid", Math.Abs(email.GetHashCode()).ToString(), "integer", "theapp"));
+                var identity = context.User.Identities.First();
+                var user = await db.Users.Include(x => x.Claims).FirstAsync(x => x.Email == email);
+                foreach (var claim in user.Claims)
+                {
+                    identity.AddClaim(new Claim(claim.ClaimType, claim.ClaimValue, claim.ClaimValueType, "theapp"));
+                }
             }
 
             await _next(context);

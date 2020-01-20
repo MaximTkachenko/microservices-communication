@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,10 +11,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Users.WebApi.AuthorizationHandlers;
+using Users.WebApi.Db;
 using Users.WebApi.Middlewares;
 
 namespace Users.WebApi
@@ -44,7 +49,12 @@ namespace Users.WebApi
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
+            services.AddSingleton<IAuthorizationHandler, ClaimsAuthorizationHandler>();
             services.AddHttpClient();
+
+            var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
+            var db = Path.Combine(folder, "db", "UsersDb.db");
+            services.AddDbContext<UsersDb>(x => x.UseSqlite($"Data Source=./usersdb.db"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Tickets.Common;
 
 namespace Tickets.Daemon
@@ -25,6 +26,7 @@ namespace Tickets.Daemon
 
             var folder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
             services.AddDbContext<TicketsDb>(x => x.UseSqlite(Path.Combine(folder, "db", "TicketsDb")));
+            services.AddSingleton<TokenCache>();//todo need to improve
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
