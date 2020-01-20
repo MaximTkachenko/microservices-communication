@@ -48,6 +48,7 @@ namespace Glossary.WebApi
             services.AddHttpClient();
             services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
             services.AddDbContext<GlossaryDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=GlossaryDb"));
+            services.Configure<ServicesOptions>(Configuration.GetSection("Services"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Common;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Glossary.WebApi
 {
@@ -20,7 +15,11 @@ namespace Glossary.WebApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    var builder = webBuilder.UseStartup<Startup>();
+                    if (!EnvironmentExt.IsInContainer)
+                    {
+                        builder.UseUrls("http://localhost:49992");
+                    }
                 });
     }
 }

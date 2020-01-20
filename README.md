@@ -4,6 +4,13 @@
 - `Glossary.WebApi` - microservice used to manage common data like cusromers, offices etc.
 - `Tickets.WebApi`, `Tickets.Daemon` - microservice to manage tickets
 
+## Hosts file for local development
+```
+127.0.0.1 users-api
+127.0.0.1 glossary-api
+127.0.0.1 tickets-api
+```
+
 ## ToDos
 - cache tokens in web app
 - validate tokens from different tenants

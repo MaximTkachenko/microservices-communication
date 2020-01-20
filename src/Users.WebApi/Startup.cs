@@ -52,6 +52,7 @@ namespace Users.WebApi
             services.AddSingleton<IAuthorizationHandler, ClaimsAuthorizationHandler>();
             services.AddHttpClient();
             services.AddDbContext<UsersDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=UsersDb"));
+            services.Configure<ServicesOptions>(Configuration.GetSection("Services"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

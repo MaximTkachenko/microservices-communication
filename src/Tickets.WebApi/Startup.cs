@@ -50,6 +50,7 @@ namespace Tickets.WebApi
             services.AddHttpClient();
             services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
             services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
+            services.Configure<ServicesOptions>(Configuration.GetSection("Services"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
