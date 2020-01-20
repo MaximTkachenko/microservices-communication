@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Users.WebApi.Db;
@@ -9,9 +10,29 @@ namespace Users.WebApi.AuthorizationHandlers
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
             OperationAuthorizationRequirement requirement,
-            User resource)
+            User user)
         {
-            //"http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            //it's a daemon application, all operations are allowed
+            if (context.User.Identities.First().Claims.Any(x =>
+                x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" && x.Value == "Daemon"))
+            {
+                context.Succeed(requirement);
+            }
+
+            //user is an admin
+            if (context.User.Identities.First().Claims.Any(x =>
+                x.Type == "x-customer" && x.Value == user.CustomerId.ToString()))
+            {
+                context.Succeed(requirement);
+            }
+
+            //user wants to get own claims
+            if(context.User.Identities.First().Claims.Any(x =>
+                x.Type == "x-userId" && x.Value == user.Id.ToString()))
+            {
+                context.Succeed(requirement);
+            }
+
             return Task.CompletedTask;
         }
     }
