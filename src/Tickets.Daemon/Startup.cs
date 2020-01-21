@@ -28,7 +28,6 @@ namespace Tickets.Daemon
             services.AddHostedService<Worker>();
             services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
             services.AddSingleton<TokenCache>();//todo need to improve
-            services.Configure<ServicesOptions>(Configuration.GetSection("Services"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

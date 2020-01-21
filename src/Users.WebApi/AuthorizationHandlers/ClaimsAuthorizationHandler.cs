@@ -19,9 +19,9 @@ namespace Users.WebApi.AuthorizationHandlers
                 context.Succeed(requirement);
             }
 
-            //user is an admin
+            //user is an admin of customer
             if (context.User.Identities.First().Claims.Any(x =>
-                x.Type == "x-customer" && x.Value == user.CustomerId.ToString()))
+                x.Type == "x-customer-admin" && x.Value == user.CustomerId.ToString()))
             {
                 context.Succeed(requirement);
             }

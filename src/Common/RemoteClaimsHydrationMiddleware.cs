@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 using Common.UsersApiModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace Common
 {
     public class RemoteClaimsHydrationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ServicesOptions _services;
+        private readonly string _usersApiBaseUrl;
 
         public RemoteClaimsHydrationMiddleware(RequestDelegate next,
-            IOptions<ServicesOptions> services)
+            IConfiguration config)
         {
             _next = next;
-            _services = services.Value;
+            _usersApiBaseUrl = config.GetValue<string>("Services:UsersApiUrl");
         }
 
         public async Task InvokeAsync(HttpContext context,
@@ -42,7 +42,7 @@ namespace Common
 
             var accessToken = await accessTokenGetter.GetTokenAsync(context);
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{_services.UsersApiUrl}/api/users/{email}/claims");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_usersApiBaseUrl}/api/users/{email}/claims");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var response = await http.CreateClient().SendAsync(request);
             if (!response.IsSuccessStatusCode)

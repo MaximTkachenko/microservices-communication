@@ -1,14 +1,31 @@
 ## Projects
-- `Portal` - web application, AzureAd OpenIdConnect
-- `User.WebApi` - microservice used to manage users and claims
-- `Glossary.WebApi` - microservice used to manage common data like cusromers, offices etc.
-- `Tickets.WebApi`, `Tickets.Daemon` - microservice to manage tickets
+- `Portal` - web application, AzureAd OpenIdConnect, port `49990`
+- `User.WebApi` - api microservice used to manage users and claims, port `49991`
+- `Glossary.WebApi` - api microservice used to manage common data like cusromers, offices etc., port `49992`
+- `Tickets.WebApi`- api microservice to manage tickets, port `49993`
+- `Tickets.Daemon` - daemon microservice to process asynchronous operations
 
 ## Hosts file for local development
 ```
 127.0.0.1 users-api
 127.0.0.1 glossary-api
 127.0.0.1 tickets-api
+```
+
+## sqlserver
+```
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=P@ssw0rd12345!!" -u 0:0 -p 1434:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+sqlcmd -S 127.0.0.1,1434 -U SA -P P@ssw0rd12345!!
+```
+
+from another docker container
+```
+Server=host.docker.internal,1434;Database=UsersDb;User ID=sa;Password=P@ssw0rd12345!!
+```
+
+from host machine
+```
+Server=127.0.0.1,1434;Database=UsersDb;User ID=sa;Password=P@ssw0rd12345!!
 ```
 
 ## ToDos

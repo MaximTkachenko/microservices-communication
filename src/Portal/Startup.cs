@@ -108,7 +108,6 @@ namespace Portal
             services.AddSingleton<TokenCache>();//todo need to improve
             services.AddSingleton<IAccessTokenGetter, FromCacheAccessTokenGetter>();
             services.AddDbContext<PortalDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=PortalDb"));
-            services.Configure<ServicesOptions>(Configuration.GetSection("Services"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
