@@ -14,7 +14,7 @@
 
 ## sqlserver
 ```
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=P@ssw0rd12345!!" -u 0:0 -p 1434:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=P@ssw0rd12345!!" -u 0:0 -p 1434:1433 -d -v C:\temp\sqlserver-docker\data:/var/opt/mssql/data -v C:\temp\sqlserver-docker\log:/var/opt/mssql/log -v C:\temp\sqlserver-docker\secrets:/var/opt/mssql/secrets mcr.microsoft.com/mssql/server:2019-latest
 sqlcmd -S 127.0.0.1,1434 -U SA -P P@ssw0rd12345!!
 ```
 
