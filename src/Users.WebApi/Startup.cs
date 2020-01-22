@@ -5,9 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Common;
+using Common.Health;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -52,6 +54,8 @@ namespace Users.WebApi
             services.AddSingleton<IAuthorizationHandler, ClaimsAuthorizationHandler>();
             services.AddHttpClient();
             services.AddDbContext<UsersDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:UsersDb")));
+            services.AddHealthChecks()
+                .AddCheck<EnvHealthCheck>("env");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +79,10 @@ namespace Users.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    ResponseWriter = HealthCheckExtensions.WriteResponse
+                });
             });
         }
     }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common;
+using Common.Health;
 using Glossary.WebApi.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -48,6 +50,8 @@ namespace Glossary.WebApi
             services.AddHttpClient();
             services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
             services.AddDbContext<GlossaryDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=GlossaryDb"));
+            services.AddHealthChecks()
+                .AddCheck<EnvHealthCheck>("env");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +75,10 @@ namespace Glossary.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    ResponseWriter = HealthCheckExtensions.WriteResponse
+                });
             });
         }
     }

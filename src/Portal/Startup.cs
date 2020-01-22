@@ -3,11 +3,13 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Common;
+using Common.Health;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -108,6 +110,8 @@ namespace Portal
             services.AddSingleton<TokenCache>();//todo need to improve
             services.AddSingleton<IAccessTokenGetter, FromCacheAccessTokenGetter>();
             services.AddDbContext<PortalDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=PortalDb"));
+            services.AddHealthChecks()
+                .AddCheck<EnvHealthCheck>("env");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -143,6 +147,10 @@ namespace Portal
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    ResponseWriter = HealthCheckExtensions.WriteResponse
+                });
             });
         }
     }

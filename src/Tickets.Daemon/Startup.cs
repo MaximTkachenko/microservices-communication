@@ -1,5 +1,7 @@
 using Common;
+using Common.Health;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +30,8 @@ namespace Tickets.Daemon
             services.AddHostedService<Worker>();
             services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
             services.AddSingleton<TokenCache>();//todo need to improve
+            services.AddHealthChecks()
+                .AddCheck<EnvHealthCheck>("env");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +49,10 @@ namespace Tickets.Daemon
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Hello World!");
+                });
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    ResponseWriter = HealthCheckExtensions.WriteResponse
                 });
             });
         }
