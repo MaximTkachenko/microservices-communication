@@ -18,7 +18,7 @@ namespace Glossary.WebApi
                     var builder = webBuilder.UseStartup<Startup>();
                     if (!EnvironmentExt.IsInContainer)
                     {
-                        builder.UseUrls("http://localhost:49992");
+                        builder.UseUrls("http://localhost:5003");
                     }
                 });
     }

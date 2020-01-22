@@ -18,7 +18,7 @@ namespace Portal
                     var builder = webBuilder.UseStartup<Startup>();
                     if (!EnvironmentExt.IsInContainer)
                     {
-                        builder.UseUrls("http://localhost:49990");
+                        builder.UseUrls("http://localhost:5001");
                     }
                 });
     }

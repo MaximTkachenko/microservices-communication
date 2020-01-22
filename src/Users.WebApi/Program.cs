@@ -18,7 +18,7 @@ namespace Users.WebApi
                     var builder = webBuilder.UseStartup<Startup>();
                     if (!EnvironmentExt.IsInContainer)
                     {
-                        builder.UseUrls("http://localhost:49991");
+                        builder.UseUrls("http://localhost:5002");
                     }
                 });
     }

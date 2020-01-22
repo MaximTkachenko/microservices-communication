@@ -1,9 +1,9 @@
 ## Projects
-- `Portal` - web application, AzureAd OpenIdConnect, port `49990`
-- `User.WebApi` - api microservice used to manage users and claims, JWT, port `49991`
-- `Glossary.WebApi` - api microservice used to manage common data like cusromers, offices etc., JWT, port `49992`
-- `Tickets.WebApi`- api microservice to manage tickets, JWT, port `49993`
-- `Tickets.Daemon` - daemon microservice to process asynchronous operations, JWT, port `49994`
+- `Portal` - web application, AzureAd OpenIdConnect, port `5001`
+- `User.WebApi` - api microservice used to manage users and claims, JWT, port `5002`
+- `Glossary.WebApi` - api microservice used to manage common data like cusromers, offices etc., JWT, port `5003`
+- `Tickets.WebApi`- api microservice to manage tickets, JWT, port `5004`
+- `Tickets.Daemon` - daemon microservice to process asynchronous operations, JWT, port `5005`
 
 ## Hosts file for local development
 ```

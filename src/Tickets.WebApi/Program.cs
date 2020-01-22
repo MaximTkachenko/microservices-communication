@@ -18,7 +18,7 @@ namespace Tickets.WebApi
                     var builder = webBuilder.UseStartup<Startup>();
                     if (!EnvironmentExt.IsInContainer)
                     {
-                        builder.UseUrls("http://localhost:49993");
+                        builder.UseUrls("http://localhost:5004");
                     }
                 });
     }

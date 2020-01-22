@@ -18,7 +18,7 @@ namespace Tickets.Daemon
                     var builder = webBuilder.UseStartup<Startup>();
                     if (!EnvironmentExt.IsInContainer)
                     {
-                        builder.UseUrls("http://localhost:49994");
+                        builder.UseUrls("http://localhost:5005");
                     }
                 });
     }
