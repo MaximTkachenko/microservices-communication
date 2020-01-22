@@ -7,7 +7,11 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Tickets.Daemon/Tickets.Daemon.csproj", "Tickets.Daemon/"]
+COPY ["Common/Common.csproj", "Common/"]
+COPY ["Tickets.Common/Tickets.Common.csproj", "Tickets.Common/"]
 RUN dotnet restore "Tickets.Daemon/Tickets.Daemon.csproj"
+RUN dotnet restore "Common/Common.csproj"
+RUN dotnet restore "Tickets.Common/Tickets.Common.csproj"
 COPY . .
 WORKDIR "/src/Tickets.Daemon"
 RUN dotnet build "Tickets.Daemon.csproj" -c Release -o /app/build

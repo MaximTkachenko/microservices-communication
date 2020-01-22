@@ -28,7 +28,7 @@ namespace Tickets.Daemon
         {
             services.AddHttpClient();
             services.AddHostedService<Worker>();
-            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
+            //services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
             services.AddSingleton<TokenCache>();//todo need to improve
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");
@@ -46,10 +46,6 @@ namespace Tickets.Daemon
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
                 endpoints.MapHealthChecks("/health", new HealthCheckOptions
                 {
                     ResponseWriter = HealthCheckExtensions.WriteResponse

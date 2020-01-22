@@ -19,6 +19,16 @@ services:
             - "49990:80"
         networks:
             - theapp
+    
+    tickets-daemon:
+        image: tickets-daemon-app:v1
+        container_name: tickets-daemon-c
+        environment:
+            Services__UsersApiUrl: "http://users-api:80"
+        ports:
+            - "49994:80"
+        networks:
+            - theapp
 
 networks:
     theapp:

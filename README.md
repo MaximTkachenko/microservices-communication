@@ -1,9 +1,9 @@
 ## Projects
 - `Portal` - web application, AzureAd OpenIdConnect, port `49990`
-- `User.WebApi` - api microservice used to manage users and claims, port `49991`
-- `Glossary.WebApi` - api microservice used to manage common data like cusromers, offices etc., port `49992`
-- `Tickets.WebApi`- api microservice to manage tickets, port `49993`
-- `Tickets.Daemon` - daemon microservice to process asynchronous operations
+- `User.WebApi` - api microservice used to manage users and claims, JWT, port `49991`
+- `Glossary.WebApi` - api microservice used to manage common data like cusromers, offices etc., JWT, port `49992`
+- `Tickets.WebApi`- api microservice to manage tickets, JWT, port `49993`
+- `Tickets.Daemon` - daemon microservice to process asynchronous operations, JWT, port `49994`
 
 ## Hosts file for local development
 ```
@@ -13,18 +13,20 @@
 ```
 
 ## sqlserver
-```
+Run sqlserver for linux in docker:
+```bat
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=P@ssw0rd12345!!" --name sqlserver -p 1434:1433 -d -v C:\temp\sqlserver-docker\data:/var/opt/mssql/data -v C:\temp\sqlserver-docker\log:/var/opt/mssql/log -v C:\temp\sqlserver-docker\secrets:/var/opt/mssql/secrets mcr.microsoft.com/mssql/server:2019-latest
+```
+Test connection:
+```bat
 sqlcmd -S 127.0.0.1,1434 -U SA -P P@ssw0rd12345!!
 ```
-
-from another docker container
-```
+Connect from docker container
+```bat
 Server=host.docker.internal,1434;Database=UsersDb;User ID=sa;Password=P@ssw0rd12345!!
 ```
-
-from host machine
-```
+Connect from host machine
+```bat
 Server=127.0.0.1,1434;Database=UsersDb;User ID=sa;Password=P@ssw0rd12345!!
 ```
 
