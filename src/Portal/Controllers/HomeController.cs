@@ -22,6 +22,7 @@ namespace Portal.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("I'm in {route}", nameof(Index));
             return View();
         }
 
