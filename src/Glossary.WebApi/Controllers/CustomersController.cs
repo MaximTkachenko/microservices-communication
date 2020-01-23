@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Glossary.WebApi.Controllers
@@ -11,7 +7,7 @@ namespace Glossary.WebApi.Controllers
     [Route("[controller]")]
     public class CustomersController : ControllerBase
     {
-        private readonly ILogger<CustomersController> _logger;
+        private readonly ILogger _logger;
 
         public CustomersController(ILogger<CustomersController> logger)
         {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using IHttpClientFactory = System.Net.Http.IHttpClientFactory;
 
@@ -18,16 +19,19 @@ namespace Tickets.Daemon
         private readonly AuthenticationContext _authContext;
         private readonly ClientCredential _credential;
         private readonly string _usersApiBaseUrl;
+        private readonly AzureAdOptions _azureAdConfig;
 
         public Worker(ILogger<Worker> logger,
             IHttpClientFactory http,
             TokenCache tokenCache,
-            IConfiguration config)
+            IConfiguration config,
+            IOptions<AzureAdOptions> azureAdConfig)
         {
             _logger = logger;
             _http = http;
-            _authContext = new AuthenticationContext("https://login.microsoftonline.com/6b9be1b6-4f80-4ce7-8479-16c4d7726470", tokenCache);
-            _credential = new ClientCredential("da51a2ec-058f-4025-a75a-41af428be001", "9T/R7A2c?AZ4GAhkNWP]L=0UyH2ndXB6");
+            _authContext = new AuthenticationContext(_azureAdConfig.Authority, tokenCache);
+            _azureAdConfig = azureAdConfig.Value;
+            _credential = new ClientCredential(_azureAdConfig.ClientId, _azureAdConfig.ClientSecret);
             _usersApiBaseUrl = config.GetValue<string>("Services:UsersApiUrl");
         }
 
@@ -37,7 +41,7 @@ namespace Tickets.Daemon
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
-                var tokenResult = await _authContext.AcquireTokenAsync("api://theapp.api", _credential);
+                var tokenResult = await _authContext.AcquireTokenAsync(_azureAdConfig.Resource, _credential);
 
                 Console.WriteLine(tokenResult.AccessToken);
 

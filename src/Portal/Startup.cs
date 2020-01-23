@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using Common;
 using Common.Health;
@@ -23,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Portal.Db;
 using Portal.Middleware;
 using Portal.Services;
+using Serilog;
 
 namespace Portal
 {
@@ -84,9 +83,6 @@ namespace Portal
                         var result = await authContext.AcquireTokenByAuthorizationCodeAsync(
                             context.ProtocolMessage.Code, new Uri(currentUri), credential, context.Options.Resource);
 
-                        //var cp = typeof(TokenCache).GetField("_tokenCacheDictionary", BindingFlags.Instance | BindingFlags.NonPublic);
-                        //var tokens = cp.GetValue(context.HttpContext.RequestServices.GetService<TokenCache>());
-
                         context.HandleCodeRedemption(result.AccessToken, result.IdToken);
                     }
                     // If your application needs to authenticate single users, add your user validation below.
@@ -129,6 +125,8 @@ namespace Portal
             }
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 

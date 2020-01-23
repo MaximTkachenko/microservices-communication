@@ -20,6 +20,7 @@ namespace Portal.Services
 
         public async Task<string> GetTokenAsync(HttpContext context)
         {
+            //todo reuse settings, keep string in settings
             var opts = new AzureADOptions();
             _config.Bind("AzureAd", opts);
             var credential = new ClientCredential(opts.ClientId, opts.ClientSecret);

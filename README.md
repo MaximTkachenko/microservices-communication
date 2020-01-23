@@ -30,6 +30,12 @@ Connect from host machine
 Server=127.0.0.1,1434;Database=UsersDb;User ID=sa;Password=P@ssw0rd12345!!
 ```
 
+## Seq
+
+```bat
+docker run -d --name seq -e ACCEPT_EULA=Y -v C:\temp\seq:/data -p 5341:80 datalust/seq:latest
+```
+
 ## ToDos
 - cache tokens in web app
 - validate tokens from different tenants

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Serilog;
 using Tickets.Common;
 
 namespace Tickets.Daemon
@@ -30,6 +31,7 @@ namespace Tickets.Daemon
             services.AddHostedService<Worker>();
             //services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
             services.AddSingleton<TokenCache>();//todo need to improve
+            services.Configure<AzureAdOptions>(Configuration.GetSection("AzureAd"));
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");
         }
@@ -41,6 +43,8 @@ namespace Tickets.Daemon
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 
