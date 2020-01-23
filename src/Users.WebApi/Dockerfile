@@ -12,10 +12,10 @@ RUN dotnet restore "Users.WebApi/Users.WebApi.csproj"
 RUN dotnet restore "Common/Common.csproj"
 COPY . .
 WORKDIR "/src/Users.WebApi"
-RUN dotnet build "Users.WebApi.csproj" -c Release -o /app/build
+RUN dotnet build "Users.WebApi.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "Users.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Users.WebApi.csproj" -c Release -o /app/publish --no-restore
 
 FROM base AS final
 WORKDIR /app

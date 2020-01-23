@@ -10,10 +10,10 @@ COPY ["Tickets.WebApi/Tickets.WebApi.csproj", "Tickets.WebApi/"]
 RUN dotnet restore "Tickets.WebApi/Tickets.WebApi.csproj"
 COPY . .
 WORKDIR "/src/Tickets.WebApi"
-RUN dotnet build "Tickets.WebApi.csproj" -c Release -o /app/build
+RUN dotnet build "Tickets.WebApi.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "Tickets.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Tickets.WebApi.csproj" -c Release -o /app/publish --no-restore
 
 FROM base AS final
 WORKDIR /app

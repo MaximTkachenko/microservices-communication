@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -15,7 +16,8 @@ namespace Common.Health
             var dictionary = new Dictionary<string, object>
             {
                 {"OS_VERSION", Environment.OSVersion.VersionString}, 
-                {"MACHINE_NAME", Environment.MachineName}
+                {"MACHINE_NAME", Environment.MachineName},
+                {"DATETIME_UTC", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)}
             };
             foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
             {

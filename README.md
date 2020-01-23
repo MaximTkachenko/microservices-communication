@@ -141,3 +141,4 @@ JWT sample for application permissions:
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/setup-multi-tenant-app
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent
 - authorization and data protection
+- https://www.projectatomic.io/blog/2015/07/what-are-docker-none-none-images/

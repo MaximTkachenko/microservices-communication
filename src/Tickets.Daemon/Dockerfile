@@ -14,10 +14,10 @@ RUN dotnet restore "Common/Common.csproj"
 RUN dotnet restore "Tickets.Common/Tickets.Common.csproj"
 COPY . .
 WORKDIR "/src/Tickets.Daemon"
-RUN dotnet build "Tickets.Daemon.csproj" -c Release -o /app/build
+RUN dotnet build "Tickets.Daemon.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "Tickets.Daemon.csproj" -c Release -o /app/publish
+RUN dotnet publish "Tickets.Daemon.csproj" -c Release -o /app/publish --no-restore
 
 FROM base AS final
 WORKDIR /app

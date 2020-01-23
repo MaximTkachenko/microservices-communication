@@ -7,13 +7,15 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Glossary.WebApi/Glossary.WebApi.csproj", "Glossary.WebApi/"]
+COPY ["Common/Common.csproj", "Common/"]
 RUN dotnet restore "Glossary.WebApi/Glossary.WebApi.csproj"
+RUN dotnet restore "Common/Common.csproj"
 COPY . .
 WORKDIR "/src/Glossary.WebApi"
-RUN dotnet build "Glossary.WebApi.csproj" -c Release -o /app/build
+RUN dotnet build "Glossary.WebApi.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "Glossary.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Glossary.WebApi.csproj" -c Release -o /app/publish --no-restore
 
 FROM base AS final
 WORKDIR /app
