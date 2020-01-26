@@ -29,8 +29,8 @@ namespace Tickets.Daemon
         {
             _logger = logger;
             _http = http;
-            _authContext = new AuthenticationContext(_azureAdConfig.Authority, tokenCache);
             _azureAdConfig = azureAdConfig.Value;
+            _authContext = new AuthenticationContext(_azureAdConfig.Authority, tokenCache);
             _credential = new ClientCredential(_azureAdConfig.ClientId, _azureAdConfig.ClientSecret);
             _usersApiBaseUrl = config.GetValue<string>("Services:UsersApiUrl");
         }
