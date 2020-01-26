@@ -9,7 +9,6 @@ WORKDIR /src
 COPY ["Glossary.WebApi/Glossary.WebApi.csproj", "Glossary.WebApi/"]
 COPY ["Common/Common.csproj", "Common/"]
 RUN dotnet restore "Glossary.WebApi/Glossary.WebApi.csproj"
-RUN dotnet restore "Common/Common.csproj"
 COPY . .
 WORKDIR "/src/Glossary.WebApi"
 RUN dotnet build "Glossary.WebApi.csproj" -c Release -o /app/build --no-restore

@@ -7,6 +7,8 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Tickets.WebApi/Tickets.WebApi.csproj", "Tickets.WebApi/"]
+COPY ["Common/Common.csproj", "Common/"]
+COPY ["Tickets.Common/Tickets.Common.csproj", "Tickets.Common/"]
 RUN dotnet restore "Tickets.WebApi/Tickets.WebApi.csproj"
 COPY . .
 WORKDIR "/src/Tickets.WebApi"

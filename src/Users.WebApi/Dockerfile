@@ -9,7 +9,6 @@ WORKDIR /src
 COPY ["Users.WebApi/Users.WebApi.csproj", "Users.WebApi/"]
 COPY ["Common/Common.csproj", "Common/"]
 RUN dotnet restore "Users.WebApi/Users.WebApi.csproj"
-RUN dotnet restore "Common/Common.csproj"
 COPY . .
 WORKDIR "/src/Users.WebApi"
 RUN dotnet build "Users.WebApi.csproj" -c Release -o /app/build --no-restore

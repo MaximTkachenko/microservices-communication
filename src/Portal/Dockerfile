@@ -10,7 +10,6 @@ WORKDIR /src
 COPY ["Portal/Portal.csproj", "Portal/"]
 COPY ["Common/Common.csproj", "Common/"]
 RUN dotnet restore "Portal/Portal.csproj"
-RUN dotnet restore "Common/Common.csproj"
 COPY . .
 WORKDIR "/src/Portal"
 RUN dotnet build "Portal.csproj" -c Release -o /app/build --no-restore
