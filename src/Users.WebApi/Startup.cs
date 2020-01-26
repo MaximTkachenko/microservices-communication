@@ -44,7 +44,7 @@ namespace Users.WebApi
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            services.AddSingleton<IAuthorizationHandler, ClaimsAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
             services.AddHttpClient();
             services.AddDbContext<UsersDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:UsersDb")));
             services.AddHealthChecks()

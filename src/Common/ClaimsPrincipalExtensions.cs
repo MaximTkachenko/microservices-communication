@@ -10,5 +10,10 @@ namespace Common
             email = cp.Identities.First().Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             return !string.IsNullOrEmpty(email);
         }
+
+        public static bool TryFindClaim(this ClaimsPrincipal cp, string type, string value)
+        {
+            return cp.Identities.First().Claims.Any(x => x.Type == type && x.Value == value);
+        }
     }
 }
