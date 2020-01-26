@@ -36,11 +36,7 @@ namespace Tickets.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = "https://login.microsoftonline.com/6b9be1b6-4f80-4ce7-8479-16c4d7726470/";
-                    options.Audience = "api://theapp.api";
-                });
+                .AddJwtBearer(options => Configuration.Bind("AzureAd", options));
 
             services.AddControllers(config =>
             {
