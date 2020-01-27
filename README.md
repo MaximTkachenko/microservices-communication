@@ -2,7 +2,7 @@
 It's a demo project to show:
 - different [microservices patterns](https://microservices.io/patterns/index.html)
 - how to configure local environment to develop microservices
-- the way to deploy microservices into Azure
+- the way to deploy microservices into Azure K8S
 
 ## Projects
 - `Portal` - web application, AzureAd OpenIdConnect, port `5001`
@@ -22,6 +22,7 @@ It's a demo project to show:
 127.0.0.1 glossary-api
 127.0.0.1 tickets-api
 ```
+In case of dockerswarm and k8s these names are configured as service names.
 
 ## SQLServer
 Run sqlserver for linux in docker:
@@ -61,6 +62,7 @@ TODO
 - Azure Monitor
 
 ## ToDos
+- move client_id, client_secrets, connection_strings into [user secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows)
 - cache tokens in web app
 - validate tokens from different tenants
 - accesstoken and refreshtoken expiration
@@ -107,5 +109,5 @@ TODO
 - https://docs.microsoft.com/en-us/azure/architecture/multitenant-identity/web-api
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/setup-multi-tenant-app
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent
-- authorization and data protection
+- [authorization](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/introduction?view=aspnetcore-3.1) and [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/introduction?view=aspnetcore-3.1)
 - https://www.projectatomic.io/blog/2015/07/what-are-docker-none-none-images/
