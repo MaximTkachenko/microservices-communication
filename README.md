@@ -3,6 +3,7 @@ It's a demo project to show:
 - different [microservices patterns](https://microservices.io/patterns/index.html)
 - how to configure local environment to develop microservices
 - the way to deploy microservices into Azure K8S
+- how to create/update Azure infrastructure
 
 ## Projects
 - `Portal` - web application, AzureAd OpenIdConnect, port `5001`
@@ -98,13 +99,10 @@ TODO
 - https://www.dotnetcurry.com/devops/1518/aspnet-core-cicd-azure-kubernetes-service
 - https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0
 - https://theithollow.com/2019/02/05/kubernetes-service-publishing/
-
 - https://medium.com/google-cloud/understanding-kubernetes-networking-pods-7117dd28727
 - https://medium.com/google-cloud/understanding-kubernetes-networking-services-f0cb48e4cc82
 - https://medium.com/google-cloud/understanding-kubernetes-networking-ingress-1bc341c84078
-
 - https://gardener.cloud/050-tutorials/content/howto/service-access/
-
 - https://joonasw.net/view/aspnet-core-2-azure-ad-authentication
 - https://docs.microsoft.com/en-us/azure/architecture/multitenant-identity/web-api
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/setup-multi-tenant-app
