@@ -82,7 +82,7 @@ TODO
 - secrets
 - managed identities
 - rbac
-- https://microservices.io/patterns/index.html patterns to implement
+- [microservices patterns](https://microservices.io/patterns/index.html) to implement
 
 ## Links
 
