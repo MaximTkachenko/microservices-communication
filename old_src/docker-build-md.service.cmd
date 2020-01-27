@@ -1,1 +1,0 @@
-docker build -f Md.Service/Dockerfile -t md-service-app:%1 .

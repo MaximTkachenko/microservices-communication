@@ -1,1 +1,0 @@
-docker build -f Md.Backend.Gateway/Dockerfile -t md-backendgateway-app:%1 .

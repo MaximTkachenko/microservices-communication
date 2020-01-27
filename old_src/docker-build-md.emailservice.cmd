@@ -1,1 +1,0 @@
-docker build -f Md.EmailService/Dockerfile -t md-emailservice-app:%1 .
