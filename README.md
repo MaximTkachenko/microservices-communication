@@ -1,5 +1,5 @@
 ## Motivation
-It's a demo project to snow:
+It's a demo project to show:
 - different [microservices patterns](https://microservices.io/patterns/index.html)
 - how to configure local environment to develop microservices
 - the way to deploy microservices into Azure
