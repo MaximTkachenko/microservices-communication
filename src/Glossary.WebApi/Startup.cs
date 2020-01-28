@@ -40,7 +40,7 @@ namespace Glossary.WebApi
 
             services.AddHttpClient();
             services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
-            services.AddDbContext<GlossaryDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=GlossaryDb"));
+            services.AddDbContext<GlossaryDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:GlossaryDb")));
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");
         }

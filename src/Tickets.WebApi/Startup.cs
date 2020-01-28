@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Common;
 using Common.Health;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,13 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using Tickets.Common;
 
@@ -47,7 +39,7 @@ namespace Tickets.WebApi
             });
 
             services.AddHttpClient();
-            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
+            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:TicketsDb")));
             services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");

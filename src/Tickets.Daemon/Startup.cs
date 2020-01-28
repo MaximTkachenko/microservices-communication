@@ -29,7 +29,7 @@ namespace Tickets.Daemon
         {
             services.AddHttpClient();
             services.AddHostedService<Worker>();
-            //services.AddDbContext<TicketsDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=TicketsDb"));
+            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:TicketsDb")));
             services.AddSingleton<TokenCache>();//todo need to improve
             services.Configure<AzureAdOptions>(Configuration.GetSection("AzureAd"));
             services.AddHealthChecks()

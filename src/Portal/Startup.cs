@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +23,9 @@ using Portal.Db;
 using Portal.Middleware;
 using Portal.Services;
 using Serilog;
+using AuthenticationResult = Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationResult;
+using ClientCredential = Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential;
+using TokenCache = Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache;
 
 namespace Portal
 {
@@ -44,7 +48,15 @@ namespace Portal
             {
                 options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 options.Scope.Add(OpenIdConnectScope.OfflineAccess);
-                options.Resource = "api://theapp.api";
+                if (!options.Authority.IsVersion2())
+                {
+                    options.Resource = "api://theapp.api";
+                }
+                else
+                {
+                    options.Scope.Add("api://theapp.api/UsersAndClaims"); 
+                    options.Scope.Add("api://theapp.api/Tickets");
+                }
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -76,14 +88,45 @@ namespace Portal
                     OnAuthorizationCodeReceived = async context =>
                     {
                         var request = context.HttpContext.Request;
-                        var credential = new ClientCredential(context.Options.ClientId, context.Options.ClientSecret);
-                        var authContext = new AuthenticationContext(context.Options.Authority, context.HttpContext.RequestServices.GetService<TokenCache>());
                         var currentUri = UriHelper.BuildAbsolute(request.Scheme, request.Host, request.PathBase, request.Path);
 
-                        var result = await authContext.AcquireTokenByAuthorizationCodeAsync(
-                            context.ProtocolMessage.Code, new Uri(currentUri), credential, context.Options.Resource);
+                        //todo accessTokenAcceptedVersion, scopes, and scopes for portal
+                        //https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-app-manifest
+                        if (context.Options.Authority.IsVersion2())
+                        {
+                            //use MSAL for v2.0
+                            //https://docs.microsoft.com/bs-latn-ba/azure/active-directory/develop/msal-net-instantiate-confidential-client-config-options
+                            //https://joonasw.net/view/azure-ad-v2-and-msal-from-dev-pov
+                            //https://securecloud.blog/2019/05/22/azure-api-management-jwt-validation-for-multiple-azure-ad-partner-registrations/
+                            //https://thomaslevesque.com/2018/12/24/multitenant-azure-ad-issuer-validation-in-asp-net-core/
+                            //https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-convert-app-to-be-multi-tenant
+                            var co = new ConfidentialClientApplicationOptions
+                            {
+                                Instance = "https://login.microsoftonline.com/",
+                                TenantId = "common",
+                                ClientId = "b021b14e-1671-4fe6-b7cc-0a67a248543f",
+                                ClientSecret = "Ushs_5=SuttP50l7ZEovc?l]1[H3Z9k1",
+                                RedirectUri = currentUri
+                            };
+                            //todo cache tokens
+                            var result = await ConfidentialClientApplicationBuilder.CreateWithApplicationOptions(co)
+                                .Build()
+                                .AcquireTokenByAuthorizationCode(new []{ "api://theapp.api/UsersAndClaims", "api://theapp.api/Tickets" }, context.ProtocolMessage.Code)
+                                .ExecuteAsync();
 
-                        context.HandleCodeRedemption(result.AccessToken, result.IdToken);
+                            context.HandleCodeRedemption(result.AccessToken, result.IdToken);
+                        }
+                        else
+                        {
+                            //use ADAL for v1.0
+                            var credential = new ClientCredential(context.Options.ClientId, context.Options.ClientSecret);
+                            var authContext = new AuthenticationContext(context.Options.Authority, context.HttpContext.RequestServices.GetService<TokenCache>());
+                            
+                            var result = await authContext.AcquireTokenByAuthorizationCodeAsync(
+                                context.ProtocolMessage.Code, new Uri(currentUri), credential);
+
+                            context.HandleCodeRedemption(result.AccessToken, result.IdToken);
+                        }
                     }
                     // If your application needs to authenticate single users, add your user validation below.
                     //OnTokenValidated = context =>
@@ -105,7 +148,7 @@ namespace Portal
             services.AddHttpClient();
             services.AddSingleton<TokenCache>();//todo need to improve
             services.AddSingleton<IAccessTokenGetter, FromCacheAccessTokenGetter>();
-            services.AddDbContext<PortalDb>(x => x.UseSqlServer(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=PortalDb"));
+            services.AddDbContext<PortalDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:PortalDb")));
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");
         }
@@ -134,7 +177,7 @@ namespace Portal
 
             app.UseUserClaimsDump("/claims-dump-1");
             app.UseAdalTokenAcquisitionException();
-            app.UseRemoteClaimsHydration();
+            //app.UseRemoteClaimsHydration();
             app.UseUserClaimsDump("/claims-dump-2");
 
             app.UseAuthorization();
