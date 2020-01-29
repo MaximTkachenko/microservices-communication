@@ -23,7 +23,6 @@ using Portal.Db;
 using Portal.Middleware;
 using Portal.Services;
 using Serilog;
-using AuthenticationResult = Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationResult;
 using ClientCredential = Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential;
 using TokenCache = Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache;
 
@@ -48,14 +47,14 @@ namespace Portal
             {
                 options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 options.Scope.Add(OpenIdConnectScope.OfflineAccess);
-                if (!options.Authority.IsVersion2())
+                if (options.Authority.IsVersion2())
                 {
-                    options.Resource = "api://theapp.api";
+                    options.Scope.Add("api://theapp.api/UsersAndClaims");
+                    options.Scope.Add("api://theapp.api/Tickets");
                 }
                 else
                 {
-                    options.Scope.Add("api://theapp.api/UsersAndClaims"); 
-                    options.Scope.Add("api://theapp.api/Tickets");
+                    options.Resource = "api://theapp.api";
                 }
 
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -90,7 +89,7 @@ namespace Portal
                         var request = context.HttpContext.Request;
                         var currentUri = UriHelper.BuildAbsolute(request.Scheme, request.Host, request.PathBase, request.Path);
 
-                        //todo accessTokenAcceptedVersion, scopes, and scopes for portal
+                        //todo accessTokenAcceptedVersion, scopes, and scopes for portal app
                         //https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-app-manifest
                         if (context.Options.Authority.IsVersion2())
                         {
@@ -104,8 +103,8 @@ namespace Portal
                             {
                                 Instance = "https://login.microsoftonline.com/",
                                 TenantId = "common",
-                                ClientId = "b021b14e-1671-4fe6-b7cc-0a67a248543f",
-                                ClientSecret = "Ushs_5=SuttP50l7ZEovc?l]1[H3Z9k1",
+                                ClientId = context.Options.ClientId,
+                                ClientSecret = context.Options.ClientSecret,
                                 RedirectUri = currentUri
                             };
                             //todo cache tokens
@@ -122,8 +121,7 @@ namespace Portal
                             var credential = new ClientCredential(context.Options.ClientId, context.Options.ClientSecret);
                             var authContext = new AuthenticationContext(context.Options.Authority, context.HttpContext.RequestServices.GetService<TokenCache>());
                             
-                            var result = await authContext.AcquireTokenByAuthorizationCodeAsync(
-                                context.ProtocolMessage.Code, new Uri(currentUri), credential);
+                            var result = await authContext.AcquireTokenByAuthorizationCodeAsync(context.ProtocolMessage.Code, new Uri(currentUri), credential);
 
                             context.HandleCodeRedemption(result.AccessToken, result.IdToken);
                         }

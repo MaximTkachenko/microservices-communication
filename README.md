@@ -2,7 +2,7 @@
 It's a demo project to show:
 - different [microservices patterns](https://microservices.io/patterns/index.html)
 - how to configure local environment to develop microservices
-- the way to deploy microservices into Azure K8S
+- how to deploy microservices into Azure K8S
 - how to create/update Azure infrastructure
 
 ## Projects
@@ -11,6 +11,12 @@ It's a demo project to show:
 - `Glossary.WebApi` - api microservice used to manage common data like cusromers, offices etc., JWT, port `5003`
 - `Tickets.WebApi`- api microservice to manage tickets, JWT, port `5004`
 - `Tickets.Daemon` - daemon microservice to process asynchronous operations, JWT, port `5005`
+
+## Azure app registration
+
+- `theapp.portal`
+- `theapp.api`
+- `theapp.daemon`
 
 ## Environments
 - `Development` - local environment; applications can be executed in docker or on host machine
