@@ -2,15 +2,16 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Portal.Middleware
 {
-    public class AdalTokenAcquisitionExceptionMiddleware
+    public class TokenAcquisitionExceptionMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public AdalTokenAcquisitionExceptionMiddleware(RequestDelegate next)
+        public TokenAcquisitionExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -21,18 +22,22 @@ namespace Portal.Middleware
             {
                 await _next(context);
             }
-            catch(AdalSilentTokenAcquisitionException)
+            catch (MsalUiRequiredException)
+            {
+                await context.ChallengeAsync();
+            }
+            catch (AdalSilentTokenAcquisitionException)
             {
                 await context.ChallengeAsync();
             }
         }
     }
 
-    public static class AdalTokenAcquisitionExceptionMiddlewareExtensions
+    public static class TokenAcquisitionExceptionMiddlewareExtensions
     {
-        public static IApplicationBuilder UseAdalTokenAcquisitionException(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseTokenAcquisitionException(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<AdalTokenAcquisitionExceptionMiddleware>();
+            return builder.UseMiddleware<TokenAcquisitionExceptionMiddleware>();
         }
     }
 }

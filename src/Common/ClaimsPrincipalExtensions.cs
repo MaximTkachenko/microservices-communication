@@ -7,7 +7,7 @@ namespace Common
     {
         public static bool TryGetEmail(this ClaimsPrincipal cp, out string email)
         {
-            email = cp.Identities.First().Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            email = cp.Identities.First().Claims.FirstOrDefault(x => x.Type == "preferred_username")?.Value;
             return !string.IsNullOrEmpty(email);
         }
 

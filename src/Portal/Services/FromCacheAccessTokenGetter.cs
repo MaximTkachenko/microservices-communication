@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using ClientCredential = Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential;
+using TokenCache = Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache;
 
 namespace Portal.Services
 {
@@ -23,17 +26,45 @@ namespace Portal.Services
             //todo reuse settings, keep string in settings
             var opts = new AzureADOptions();
             _config.Bind("AzureAd", opts);
-            var credential = new ClientCredential(opts.ClientId, opts.ClientSecret);
 
-            //TokenCache doesn't respect common authority and call refresh every time
-            //so here we read tenantId from claims
-            var tenantId = context.User.Claims.First(x => x.Type == "http://schemas.microsoft.com/identity/claims/tenantid").Value;
-            var authority = opts.Instance.Replace("/common", $"/{tenantId}");
+            if (opts.Instance.IsVersion2())
+            {
+                var co = new ConfidentialClientApplicationOptions
+                {
+                    Instance = "https://login.microsoftonline.com/",
+                    TenantId = "common",
+                    ClientId = opts.ClientId,
+                    ClientSecret = opts.ClientSecret
+                };
+                //todo cache tokens
 
-            var authContext = new AuthenticationContext(authority, context.RequestServices.GetService<TokenCache>());
-            var accessToken = await authContext.AcquireTokenSilentAsync("api://theapp.api", credential,
-                new UserIdentifier(context.User.Claims.First(x => x.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier").Value, UserIdentifierType.UniqueId));
-            return accessToken.AccessToken;
+                
+
+                var app = ConfidentialClientApplicationBuilder.CreateWithApplicationOptions(co)
+                    .Build();
+
+                var acc = await app.GetAccountAsync(
+                    "00000000-0000-0000-862f-1da4eed9330c");
+
+                var result = await app.AcquireTokenSilent(new[] { "api://theapp.api/UsersAndClaims", "api://theapp.api/Tickets" }, acc)
+                    .ExecuteAsync();
+
+                return result.AccessToken;
+            }
+            else
+            {
+                var credential = new ClientCredential(opts.ClientId, opts.ClientSecret);
+
+                //TokenCache doesn't respect common authority and call refresh every time
+                //so here we read tenantId from claims
+                var tenantId = context.User.Claims.First(x => x.Type == "http://schemas.microsoft.com/identity/claims/tenantid").Value;
+                var authority = opts.Instance.Replace("/common", $"/{tenantId}");
+
+                var authContext = new AuthenticationContext(authority, context.RequestServices.GetService<TokenCache>());
+                var accessToken = await authContext.AcquireTokenSilentAsync("api://theapp.api", credential,
+                    new UserIdentifier(context.User.Claims.First(x => x.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier").Value, UserIdentifierType.UniqueId));
+                return accessToken.AccessToken;
+            }
         }
     }
 }

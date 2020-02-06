@@ -108,9 +108,9 @@ namespace Portal
                                 RedirectUri = currentUri
                             };
                             //todo cache tokens
-                            var result = await ConfidentialClientApplicationBuilder.CreateWithApplicationOptions(co)
-                                .Build()
-                                .AcquireTokenByAuthorizationCode(new []{ "api://theapp.api/UsersAndClaims", "api://theapp.api/Tickets" }, context.ProtocolMessage.Code)
+                            var app = ConfidentialClientApplicationBuilder.CreateWithApplicationOptions(co)
+                                .Build();
+                            var result = await app.AcquireTokenByAuthorizationCode(new []{ "api://theapp.api/UsersAndClaims", "api://theapp.api/Tickets" }, context.ProtocolMessage.Code)
                                 .ExecuteAsync();
 
                             context.HandleCodeRedemption(result.AccessToken, result.IdToken);
@@ -174,8 +174,8 @@ namespace Portal
             app.UseAuthentication();
 
             app.UseUserClaimsDump("/claims-dump-1");
-            app.UseAdalTokenAcquisitionException();
-            //app.UseRemoteClaimsHydration();
+            app.UseTokenAcquisitionException();
+            app.UseRemoteClaimsHydration();
             app.UseUserClaimsDump("/claims-dump-2");
 
             app.UseAuthorization();

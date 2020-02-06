@@ -115,3 +115,5 @@ TODO
 - https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent
 - [authorization](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/introduction?view=aspnetcore-3.1) and [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/introduction?view=aspnetcore-3.1)
 - https://www.projectatomic.io/blog/2015/07/what-are-docker-none-none-images/
+- https://joonasw.net/view/azure-ad-authentication-aspnet-core-api-part-1
+- https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Acquiring-tokens-with-authorization-codes-on-web-apps
