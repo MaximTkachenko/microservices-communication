@@ -1,22 +1,37 @@
-## Motivation
+# Motivation
 It's a demo project to show:
 - different [microservices patterns](https://microservices.io/patterns/index.html)
 - how to configure local environment to develop microservices
 - how to deploy microservices into Azure K8S
 - how to create/update Azure infrastructure
 
-## Projects
-- `Portal` - web application, AzureAd OpenIdConnect, port `5001`
-- `User.WebApi` - api microservice used to manage users and claims, JWT, port `5002`
-- `Glossary.WebApi` - api microservice used to manage common data like cusromers, offices etc., JWT, port `5003`
-- `Tickets.WebApi`- api microservice to manage tickets, JWT, port `5004`
-- `Tickets.Daemon` - daemon microservice to process asynchronous operations, JWT, port `5005`
+# Projects
+- `Portal` - web application, AzureAd OpenIdConnect, hosted as Azure web app, port `5001`
+- `User.WebApi` - api microservice used to manage users and claims, JWT, hosted in AKS, port `5002`
+- `Glossary.WebApi` - api microservice used to manage common data like cusromers, offices etc., JWT, hosted in AKS, port `5003`
+- `Tickets.WebApi`- api microservice to manage tickets, JWT, hosted in AKS, port `5004`
+- `Tickets.Daemon` - daemon microservice to process asynchronous operations, JWT, hosted in AKS, port `5005`
+
+# Setup
 
 ## Azure app registration
 
+TODO: add scripts ti regoster applications in AAD
 - `theapp.portal`
 - `theapp.api`
 - `theapp.daemon`
+
+## Azure resources
+
+TODO scripts and/or ARM templates
+- web app
+- k8s cluster
+- 3 databases (glossary, tickets, users)
+- monitor
+
+## Azure DevOps pipelines
+
+TODO add pipelines
 
 ## Environments
 - `Development` - local environment; applications can be executed in docker or on host machine
@@ -58,15 +73,7 @@ Server=127.0.0.1,1434;Database=UsersDb;User ID=sa;Password=P@ssw0rd12345!!
 docker run -d --name seq -e ACCEPT_EULA=Y -v C:\temp\seq:/data -p 5341:80 datalust/seq:latest
 ```
 
-- ELasticsearch
-
-```bat
-TODO
-```
-
-### Cloud
-
-- Azure Monitor
+- Azure monitor
 
 ## ToDos
 - move client_id, client_secrets, connection_strings into [user secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows)
