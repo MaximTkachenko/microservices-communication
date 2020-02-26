@@ -42,15 +42,8 @@ namespace Portal
             {
                 options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 options.Scope.Add(OpenIdConnectScope.OfflineAccess);
-                if (options.Authority.IsVersion2())
-                {
-                    options.Scope.Add("api://theapp.api/UsersAndClaims");
-                    options.Scope.Add("api://theapp.api/Tickets");
-                }
-                else
-                {
-                    options.Resource = "api://theapp.api";
-                }
+                options.Scope.Add("api://theapp.api/UsersAndClaims");
+                options.Scope.Add("api://theapp.api/Tickets");
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
