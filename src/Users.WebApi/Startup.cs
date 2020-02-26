@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Users.WebApi.AuthorizationHandlers;
 using Users.WebApi.Db;
@@ -30,7 +31,14 @@ namespace Users.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => Configuration.Bind("AzureAd", options));
+                .AddJwtBearer(options =>
+                {
+                    Configuration.Bind("AzureAd", options);
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false
+                    };
+                });
 
             services.AddControllers(config =>
             {

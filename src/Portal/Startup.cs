@@ -74,9 +74,6 @@ namespace Portal
                     },
                     OnAuthorizationCodeReceived = async context =>
                     {
-                        var request = context.HttpContext.Request;
-                        var currentUri = UriHelper.BuildAbsolute(request.Scheme, request.Host, request.PathBase, request.Path);
-
                         //todo accessTokenAcceptedVersion, scopes, and scopes for portal app
                         //https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-app-manifest
                         var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenAcquisitionService>();

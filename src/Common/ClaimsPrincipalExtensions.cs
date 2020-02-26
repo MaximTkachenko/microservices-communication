@@ -5,9 +5,9 @@ namespace Common
 {
     public static class ClaimsPrincipalExtensions
     {
-        public static bool TryGetEmail(this ClaimsPrincipal cp, out string email)
+        public static bool TryGetEmail(this ClaimsPrincipal claimsPrincipal, out string email)
         {
-            email = cp.Identities.First().Claims.FirstOrDefault(x => x.Type == "preferred_username")?.Value;
+            email = claimsPrincipal.FindFirstValue("preferred_username");
             return !string.IsNullOrEmpty(email);
         }
 
