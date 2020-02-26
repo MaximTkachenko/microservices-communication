@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Portal.Middleware
 {
@@ -23,10 +22,6 @@ namespace Portal.Middleware
                 await _next(context);
             }
             catch (MsalUiRequiredException)
-            {
-                await context.ChallengeAsync();
-            }
-            catch (AdalSilentTokenAcquisitionException)
             {
                 await context.ChallengeAsync();
             }

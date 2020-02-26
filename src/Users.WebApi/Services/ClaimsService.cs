@@ -13,7 +13,7 @@ namespace Users.WebApi.Services
             _db = db;
         }
 
-        public async Task<(string Type, string Value, string ValueType, string Issuer)[]> GetClaimsAsync(long userId)
+        public Task<(string Type, string Value, string ValueType, string Issuer)[]> GetClaimsAsync(long userId)
         {
             throw new NotImplementedException();
         }

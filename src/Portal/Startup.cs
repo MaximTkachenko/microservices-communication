@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Common;
 using Common.Health;
@@ -15,16 +14,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Portal.Db;
 using Portal.Middleware;
 using Portal.Services;
 using Serilog;
-using ClientCredential = Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential;
-using TokenCache = Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache;
 
 namespace Portal
 {
@@ -91,40 +86,8 @@ namespace Portal
 
                         //todo accessTokenAcceptedVersion, scopes, and scopes for portal app
                         //https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-app-manifest
-                        if (context.Options.Authority.IsVersion2())
-                        {
-                            //use MSAL for v2.0
-                            //https://docs.microsoft.com/bs-latn-ba/azure/active-directory/develop/msal-net-instantiate-confidential-client-config-options
-                            //https://joonasw.net/view/azure-ad-v2-and-msal-from-dev-pov
-                            //https://securecloud.blog/2019/05/22/azure-api-management-jwt-validation-for-multiple-azure-ad-partner-registrations/
-                            //https://thomaslevesque.com/2018/12/24/multitenant-azure-ad-issuer-validation-in-asp-net-core/
-                            //https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-convert-app-to-be-multi-tenant
-                            var co = new ConfidentialClientApplicationOptions
-                            {
-                                Instance = "https://login.microsoftonline.com/",
-                                TenantId = "common",
-                                ClientId = context.Options.ClientId,
-                                ClientSecret = context.Options.ClientSecret,
-                                RedirectUri = currentUri
-                            };
-                            //todo cache tokens
-                            var app = ConfidentialClientApplicationBuilder.CreateWithApplicationOptions(co)
-                                .Build();
-                            var result = await app.AcquireTokenByAuthorizationCode(new []{ "api://theapp.api/UsersAndClaims", "api://theapp.api/Tickets" }, context.ProtocolMessage.Code)
-                                .ExecuteAsync();
-
-                            context.HandleCodeRedemption(result.AccessToken, result.IdToken);
-                        }
-                        else
-                        {
-                            //use ADAL for v1.0
-                            var credential = new ClientCredential(context.Options.ClientId, context.Options.ClientSecret);
-                            var authContext = new AuthenticationContext(context.Options.Authority, context.HttpContext.RequestServices.GetService<TokenCache>());
-                            
-                            var result = await authContext.AcquireTokenByAuthorizationCodeAsync(context.ProtocolMessage.Code, new Uri(currentUri), credential);
-
-                            context.HandleCodeRedemption(result.AccessToken, result.IdToken);
-                        }
+                        var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenAcquisitionService>();
+                        await tokenService.AcquireTokenByAuthorizationCodeAsync(context);
                     }
                     // If your application needs to authenticate single users, add your user validation below.
                     //OnTokenValidated = context =>
@@ -143,9 +106,10 @@ namespace Portal
             });
 
             services.AddRazorPages();
+            services.AddHttpContextAccessor();
             services.AddHttpClient();
-            services.AddSingleton<TokenCache>();//todo need to improve
             services.AddSingleton<IAccessTokenGetter, FromCacheAccessTokenGetter>();
+            services.AddSingleton<ITokenAcquisitionService, TokenAcquisitionService>();
             services.AddDbContext<PortalDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:PortalDb")));
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");
