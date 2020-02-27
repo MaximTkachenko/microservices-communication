@@ -45,6 +45,7 @@ namespace Tickets.Daemon
             {
                 _logger.LogInformation("Worker running at: {time}", DateTime.Now);
 
+                //todo need cache
                 var tokenResult = await _clientApplication.AcquireTokenForClient(new []{ "api://theapp.api/.default" })
                     .ExecuteAsync(stoppingToken);
 

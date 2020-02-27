@@ -15,10 +15,13 @@ namespace Portal.Services
     {
         private readonly IHttpContextAccessor _httpContext;
         private readonly Lazy<IConfidentialClientApplication> _application;
+        private readonly IDbTokenCache _cache;
 
-        public TokenAcquisitionService(IHttpContextAccessor httpContext)
+        public TokenAcquisitionService(IHttpContextAccessor httpContext,
+            IDbTokenCache cache)
         {
             _httpContext = httpContext;
+            _cache = cache;
             _application = new Lazy<IConfidentialClientApplication>(BuildConfidentialClientApplication);
         }
 
@@ -58,14 +61,11 @@ namespace Portal.Services
                 ClientSecret = "Ushs_5=SuttP50l7ZEovc?l]1[H3Z9k1",
                 RedirectUri = currentUri
             };
-            //todo cache tokens
+            
             var app = ConfidentialClientApplicationBuilder.CreateWithApplicationOptions(co)
                 .Build();
 
-            //todo implement
-            // Initialize token cache providers
-            //_tokenCacheProvider?.InitializeAsync(app.AppTokenCache);
-            //_tokenCacheProvider?.InitializeAsync(app.UserTokenCache);
+            _cache.ConfigureCache(app);
 
             return app;
         }

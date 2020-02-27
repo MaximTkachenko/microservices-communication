@@ -99,7 +99,9 @@ namespace Portal
             services.AddHttpContextAccessor();
             services.AddHttpClient();
             services.AddSingleton<IAccessTokenGetter, FromCacheAccessTokenGetter>();
+            //todo should be configured as scoped because it's designed for single user applications, need to implement cache storage
             services.AddSingleton<ITokenAcquisitionService, TokenAcquisitionService>();
+            services.AddSingleton<IDbTokenCache, DbTokenCache>();
             services.AddDbContext<PortalDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:PortalDb")));
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");
