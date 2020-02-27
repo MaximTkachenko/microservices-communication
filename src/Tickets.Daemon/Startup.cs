@@ -1,14 +1,11 @@
-using Common;
 using Common.Health;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Serilog;
 using Tickets.Common;
 
@@ -30,7 +27,6 @@ namespace Tickets.Daemon
             services.AddHttpClient();
             services.AddHostedService<Worker>();
             services.AddDbContext<TicketsDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:TicketsDb")));
-            services.AddSingleton<TokenCache>();//todo need to improve
             services.Configure<AzureAdOptions>(Configuration.GetSection("AzureAd"));
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");

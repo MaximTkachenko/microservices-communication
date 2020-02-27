@@ -8,10 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using ClientCredential = Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential;
-using IHttpClientFactory = System.Net.Http.IHttpClientFactory;
-using TokenCache = Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache;
 
 namespace Tickets.Daemon
 {
@@ -19,31 +15,24 @@ namespace Tickets.Daemon
     {
         private readonly ILogger<Worker> _logger;
         private readonly IHttpClientFactory _http;
-        private readonly AuthenticationContext _authContext;
-        private readonly ClientCredential _credential;
         private readonly string _usersApiBaseUrl;
-        private readonly AzureAdOptions _azureAdConfig;
-        private IConfidentialClientApplication _clientApplication;
+        private readonly IConfidentialClientApplication _clientApplication;
 
         public Worker(ILogger<Worker> logger,
             IHttpClientFactory http,
-            TokenCache tokenCache,
             IConfiguration config,
             IOptions<AzureAdOptions> azureAdConfig)
         {
             _logger = logger;
             _http = http;
-            _azureAdConfig = azureAdConfig.Value;
-            _authContext = new AuthenticationContext(_azureAdConfig.Authority, tokenCache);
-            _credential = new ClientCredential(_azureAdConfig.ClientId, _azureAdConfig.ClientSecret);
             _usersApiBaseUrl = config.GetValue<string>("Services:UsersApiUrl");
 
             var co = new ConfidentialClientApplicationOptions
             {
                 Instance = "https://login.microsoftonline.com/",
                 TenantId = "6b9be1b6-4f80-4ce7-8479-16c4d7726470",
-                ClientId = _azureAdConfig.ClientId,
-                ClientSecret = _azureAdConfig.ClientSecret
+                ClientId = azureAdConfig.Value.ClientId,
+                ClientSecret = azureAdConfig.Value.ClientSecret
             };
 
             _clientApplication = ConfidentialClientApplicationBuilder.CreateWithApplicationOptions(co)
@@ -56,7 +45,8 @@ namespace Tickets.Daemon
             {
                 _logger.LogInformation("Worker running at: {time}", DateTime.Now);
 
-                var tokenResult = await _authContext.AcquireTokenAsync(_azureAdConfig.Resource, _credential);
+                var tokenResult = await _clientApplication.AcquireTokenForClient(new []{ "api://theapp.api/.default" })
+                    .ExecuteAsync(stoppingToken);
 
                 Console.WriteLine(tokenResult.AccessToken);
 
@@ -68,9 +58,6 @@ namespace Tickets.Daemon
                 Console.WriteLine(claims);
 
                 await Task.Delay(5000, stoppingToken);
-
-                var result = await _clientApplication.AcquireTokenForClient(new []{"api://theapp.api/.default"})
-                    .ExecuteAsync(stoppingToken);
             }
         }
     }
