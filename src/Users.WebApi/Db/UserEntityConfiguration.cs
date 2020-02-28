@@ -7,11 +7,10 @@ namespace Users.WebApi.Db
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Users")
-                .HasKey(x => x.Id);
-
-            builder.Metadata.FindNavigation(nameof(User.Claims))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+            builder.Property(x => x.Email).HasMaxLength(300).IsRequired();
+            builder.HasIndex(x => x.Email).IsUnique();
+            builder.Property(x => x.Name).HasMaxLength(500).IsRequired();
+            builder.Property(x => x.CustomerName).HasMaxLength(300).IsRequired();
         }
     }
 }

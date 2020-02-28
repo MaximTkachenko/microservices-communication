@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Common;
-using Common.UsersApiModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Users.WebApi.Db;
+using Users.WebApi.Services;
 
 namespace Users.WebApi.Controllers
 {
@@ -15,12 +13,15 @@ namespace Users.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
+        private readonly IClaimsService _claimsService;
         private readonly UsersDb _db;
 
         public UsersController(IAuthorizationService authorizationService,
+            IClaimsService claimsService,
             UsersDb db)
         {
             _authorizationService = authorizationService;
+            _claimsService = claimsService;
             _db = db;
         }
 
@@ -37,17 +38,7 @@ namespace Users.WebApi.Controllers
                 return Forbid();
             }
 
-            var theAppClaims = await _db.Claims.Where(x => x.UserId == user.Id)
-                .Select(x => new ApiClaim {ClaimType = x.ClaimType, ClaimValue = x.ClaimValue, ClaimValueType = x.ClaimValueType })
-                .ToListAsync();
-            return Ok(theAppClaims);
-        }
-
-        [HttpDelete, Route("{userId}/claims/{claimId}")]
-        //todo check permissions: daemon, owner or admin
-        public IActionResult DeleteClaim(long userId, long claimId)
-        {
-            return null;
+            return Ok(await _claimsService.GetClaimsAsync(user.Id));
         }
 
         [HttpGet, Route("{userId}")]

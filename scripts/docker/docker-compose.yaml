@@ -4,7 +4,7 @@ services:
         image: users-api-app:v1
         container_name: users-api-c
         environment:
-            Db__UsersDb: "Server=host.docker.internal,1434;Database=UsersDb;User ID=sa;Password=P@ssw0rd12345!!"
+            ConnectionStrings__UsersDb: "Server=host.docker.internal,1434;Database=UsersDb;User ID=sa;Password=P@ssw0rd12345!!"
         ports:
             - "5002:80"
         networks:
@@ -15,6 +15,7 @@ services:
         container_name: portal-c
         environment:
             Services__UsersApiUrl: "http://users-api:80"
+            ConnectionStrings__PortalDb: "Server=host.docker.internal,1434;Database=PortalDb;User ID=sa;Password=P@ssw0rd12345!!"
         ports:
             - "5001:80"
         networks:

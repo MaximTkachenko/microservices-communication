@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Common.UsersApiModels;
 
 namespace Users.WebApi.Services
 {
     public interface IClaimsService
     {
-        Task<(string Type, string Value, string ValueType, string Issuer)[]> GetClaimsAsync(long userId);
+        Task<TheAppClaim[]> GetClaimsAsync(long userId);
     }
 }

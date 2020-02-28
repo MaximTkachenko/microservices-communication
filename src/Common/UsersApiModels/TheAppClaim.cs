@@ -2,7 +2,7 @@
 
 namespace Common.UsersApiModels
 {
-    public class ApiClaim
+    public class TheAppClaim
     {
         [JsonPropertyName("claimType")]
         public string ClaimType { get; set; }
@@ -12,5 +12,9 @@ namespace Common.UsersApiModels
 
         [JsonPropertyName("claimValueType")]
         public string ClaimValueType { get; set; }
+
+        public const string UserId = "x-userId";
+        public const string CustomerId = "x-customerId";
+        public const string AdminForCustomerId = "x-admin-for-customerId";
     }
 }

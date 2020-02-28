@@ -42,6 +42,11 @@ namespace Common
             string userObjectId = claimsPrincipal.GetObjectId();
             string tenantId = claimsPrincipal.GetTenantId();
 
+            if (string.IsNullOrEmpty(userObjectId) || string.IsNullOrEmpty(tenantId))
+            {
+                return null;
+            }
+
             return $"{userObjectId}.{tenantId}";
         }
     }

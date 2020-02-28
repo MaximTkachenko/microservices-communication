@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Common;
+using Common.UsersApiModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Users.WebApi.Db;
@@ -19,13 +20,13 @@ namespace Users.WebApi.AuthorizationHandlers
             }
 
             //user is an admin of customer
-            if (context.User.TryFindClaim("x-customer-admin", user.CustomerId.ToString()))
+            if (context.User.TryFindClaim(TheAppClaim.AdminForCustomerId, user.CustomerId.ToString()))
             {
                 context.Succeed(requirement);
             }
 
             //user wants to get own claims
-            if(context.User.TryFindClaim("x-userId", user.Id.ToString()))
+            if(context.User.TryFindClaim(TheAppClaim.UserId, user.Id.ToString()))
             {
                 context.Succeed(requirement);
             }

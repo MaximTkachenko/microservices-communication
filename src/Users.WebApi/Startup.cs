@@ -15,6 +15,7 @@ using Serilog;
 using Users.WebApi.AuthorizationHandlers;
 using Users.WebApi.Db;
 using Users.WebApi.Middlewares;
+using Users.WebApi.Services;
 
 namespace Users.WebApi
 {
@@ -50,7 +51,8 @@ namespace Users.WebApi
 
             services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
             services.AddHttpClient();
-            services.AddDbContext<UsersDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:UsersDb")));
+            services.AddDbContext<UsersDb>(x => x.UseSqlServer(Configuration.GetConnectionString("UsersDb")));
+            services.AddScoped<IClaimsService, ClaimsService>();
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");
         }

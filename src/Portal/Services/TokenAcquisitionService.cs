@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Common;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -27,6 +28,13 @@ namespace Portal.Services
 
         public async Task AcquireTokenByAuthorizationCodeAsync(AuthorizationCodeReceivedContext context)
         {
+            // The cache will need the claims from the ID token.
+            // If they are not yet in the HttpContext.User's claims, add them here.
+            if (!context.HttpContext.User.Claims.Any())
+            {
+                context.HttpContext.User.Identities.First().AddClaims(context.Principal.Claims);
+            }
+
             var result = await _application.Value.AcquireTokenByAuthorizationCode(new[] { "api://theapp.api/UsersAndClaims", "api://theapp.api/Tickets" }, context.ProtocolMessage.Code)
                 .ExecuteAsync();
 

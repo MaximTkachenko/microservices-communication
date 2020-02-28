@@ -51,10 +51,10 @@ namespace Common
                 return;
             }
 
-            IEnumerable<ApiClaim> claims;
+            IEnumerable<TheAppClaim> claims;
             using (var responseStream = await response.Content.ReadAsStreamAsync())
             {
-                claims = await JsonSerializer.DeserializeAsync<ApiClaim[]>(responseStream);
+                claims = await JsonSerializer.DeserializeAsync<TheAppClaim[]>(responseStream);
             }
 
             foreach (var claim in claims)
