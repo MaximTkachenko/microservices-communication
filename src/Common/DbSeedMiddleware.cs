@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Builder;
@@ -13,7 +12,7 @@ namespace Common
     {
         private readonly RequestDelegate _next;
         private readonly string _dbConnectionString;
-        private readonly string _dbServerConnectionString;
+        private readonly string _serverConnectionString;
         private readonly string _dbName;
 
         public DbSeedMiddleware(RequestDelegate next, 
@@ -26,7 +25,7 @@ namespace Common
             var builder = new SqlConnectionStringBuilder(_dbConnectionString);
             _dbName = builder.InitialCatalog;
             builder.InitialCatalog = string.Empty;
-            _dbServerConnectionString = builder.ToString();
+            _serverConnectionString = builder.ToString();
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -35,7 +34,7 @@ namespace Common
             {
                 using (var conn = new SqlConnection(_dbConnectionString))
                 {
-                    await conn.ExecuteAsync("select 1");
+                    await conn.ExecuteAsync("SELECT 1");
                 }
             }
             catch (SqlException)
@@ -49,9 +48,9 @@ namespace Common
 
         private async Task CreateDatabase()
         {
-            using (var conn = new SqlConnection(_dbServerConnectionString))
+            using (var conn = new SqlConnection(_serverConnectionString))
             {
-                await conn.ExecuteAsync($"create database {_dbName}");
+                await conn.ExecuteAsync($"CREATE DATABASE {_dbName}");
             }
 
             var path = Path.Combine("Migrations", "Initial.sql");
