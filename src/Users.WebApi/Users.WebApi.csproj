@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="DbSeed\Initial.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Migrations\Initial.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

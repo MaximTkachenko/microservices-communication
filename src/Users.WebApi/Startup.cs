@@ -63,6 +63,7 @@ namespace Users.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDbSeed("UsersDb");
             }
 
             app.UseSerilogRequestLogging();

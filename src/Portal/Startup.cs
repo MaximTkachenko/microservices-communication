@@ -112,6 +112,7 @@ namespace Portal
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDbSeed("PortalDb");
             }
             else
             {
