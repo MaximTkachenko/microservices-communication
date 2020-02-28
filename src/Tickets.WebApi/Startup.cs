@@ -39,7 +39,7 @@ namespace Tickets.WebApi
             });
 
             services.AddHttpClient();
-            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:TicketsDb")));
+            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(Configuration.GetConnectionString("TicketsDb")));
             services.AddSingleton<IAccessTokenGetter, FromHeaderAccessTokenGetter>();
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");

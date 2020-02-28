@@ -35,6 +35,7 @@ namespace Tickets.Daemon
                 ClientSecret = azureAdConfig.Value.ClientSecret
             };
 
+            //todo configure cache
             _clientApplication = ConfidentialClientApplicationBuilder.CreateWithApplicationOptions(co)
                 .Build();
         }

@@ -26,7 +26,7 @@ namespace Tickets.Daemon
         {
             services.AddHttpClient();
             services.AddHostedService<Worker>();
-            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(Configuration.GetValue<string>("Db:TicketsDb")));
+            services.AddDbContext<TicketsDb>(x => x.UseSqlServer(Configuration.GetConnectionString("TicketsDb")));
             services.Configure<AzureAdOptions>(Configuration.GetSection("AzureAd"));
             services.AddHealthChecks()
                 .AddCheck<EnvHealthCheck>("env");

@@ -26,6 +26,7 @@ services:
         container_name: tickets-daemon-c
         environment:
             Services__UsersApiUrl: "http://users-api:80"
+            ConnectionStrings__TicketsDb: "Server=host.docker.internal,1434;Database=TicketsDb;User ID=sa;Password=P@ssw0rd12345!!"
         ports:
             - "5005:80"
         networks:
