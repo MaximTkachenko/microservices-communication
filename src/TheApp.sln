@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Info", "Info", "{E9B65782-0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tickets.Common", "Tickets.Common\Tickets.Common.csproj", "{D44659BF-1211-422F-AA1C-0AC5C06DCA5D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "Gateway\Gateway.csproj", "{A36391A9-1775-4C45-BA91-0A52737AEF22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{D44659BF-1211-422F-AA1C-0AC5C06DCA5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D44659BF-1211-422F-AA1C-0AC5C06DCA5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D44659BF-1211-422F-AA1C-0AC5C06DCA5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A36391A9-1775-4C45-BA91-0A52737AEF22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A36391A9-1775-4C45-BA91-0A52737AEF22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A36391A9-1775-4C45-BA91-0A52737AEF22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A36391A9-1775-4C45-BA91-0A52737AEF22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
