@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Builder;
@@ -61,12 +62,9 @@ namespace Common
 
             using (var conn = new SqlConnection(_dbConnectionString))
             {
-                foreach (var statement in File.ReadAllText(path).Split("GO"))
+                foreach (var statement in File.ReadAllText(path).Split(new [] {"GO"}, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (!string.IsNullOrEmpty(statement))
-                    {
-                        await conn.ExecuteAsync(statement);
-                    }
+                    await conn.ExecuteAsync(statement);
                 }
             }
         }
@@ -81,12 +79,9 @@ namespace Common
 
             using (var conn = new SqlConnection(_dbConnectionString))
             {
-                foreach (var statement in File.ReadAllText(path).Split("GO"))
+                foreach (var statement in File.ReadAllText(path).Split(new[] { "GO" }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (!string.IsNullOrEmpty(statement))
-                    {
-                        await conn.ExecuteAsync(statement);
-                    }
+                    await conn.ExecuteAsync(statement);
                 }
             }
         }
