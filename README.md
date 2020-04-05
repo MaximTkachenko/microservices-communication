@@ -100,6 +100,7 @@ docker run -d --name seq -e ACCEPT_EULA=Y -v C:\temp\seq:/data -p 5341:80 datalu
 
 ## Links
 
+- https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.ServiceBus.Messaging/AtomicTransactions
 - https://joonasw.net/view/defining-permissions-and-roles-in-aad
 - https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Acquiring-tokens-with-authorization-codes-on-web-apps
 - https://auth0.com/blog/introduction-to-microservices-part-4-dependencies/
